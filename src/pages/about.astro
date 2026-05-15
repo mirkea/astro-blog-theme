@@ -1,5 +1,6 @@
 ---
 export const prerender = true;
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Button from "../components/Button.astro";
 
@@ -62,9 +63,9 @@ const iconPaths: Record<SkillIcon, string> = {
           <div
             class="theme-transition-element mx-auto aspect-square w-full max-w-[280px] overflow-hidden border-6 border-slate-100/60 sm:max-w-[320px] sm:border-8 md:max-w-md dark:border-zinc-800"
           >
-            <img
+            <Image
               src="/profile.webp"
-              alt="Profile photo"
+              alt="Profile"
               class="h-full w-full object-cover"
               loading="eager"
               width="480"
@@ -123,7 +124,7 @@ const iconPaths: Record<SkillIcon, string> = {
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {
           skills.map((skill) => (
-            <div class="skill-card theme-transition-element transform rounded-md border border-zinc-200 bg-white transition-all duration-300 hover:shadow-md dark:border-zinc-700 dark:bg-zinc-800/50 dark:hover:border-zinc-600">
+            <div class="skill-card theme-transition-element rounded-md border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800/50 dark:hover:border-zinc-600">
               <div class="flex items-center gap-4 p-5">
                 <div class="theme-transition-bg theme-transition-color flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
                   <svg
@@ -203,34 +204,14 @@ const iconPaths: Record<SkillIcon, string> = {
 
 <style>
   .skill-card {
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
-  }
-
-  .skill-card:hover {
-    z-index: 10;
-  }
-
-  @media (max-width: 640px) {
-    .skill-card {
-      transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
-    }
-
-    .skill-card:hover {
-      transform: translateY(-5px) !important;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
-    }
   }
 
   .skill-card.theme-transition-element {
     transition:
       background-color var(--theme-transition),
       border-color var(--theme-transition),
-      color var(--theme-transition),
-      box-shadow var(--theme-transition),
-      transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      color var(--theme-transition);
   }
 </style>

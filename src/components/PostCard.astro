@@ -96,12 +96,7 @@ const estimatedReadingTime = readingTime ?? "5 min read";
         class="theme-transition-color relative z-10 mx-auto mt-3 flex min-h-[44px] items-center text-sm font-medium text-zinc-700 transition-colors group-hover:text-zinc-900 sm:mx-0 sm:mt-4 dark:text-zinc-300 dark:group-hover:text-zinc-100"
       >
         <span class="pr-2">Read article</span>
-        <svg
-          viewBox="0 0 16 16"
-          fill="none"
-          aria-hidden="true"
-          class="ml-0 h-4 w-4 stroke-current"
-        >
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="ml-0 h-4 w-4 stroke-current">
           <path
             d="M6.75 5.75 9.25 8l-2.5 2.25"
             stroke-width="1.5"
@@ -116,12 +111,12 @@ const estimatedReadingTime = readingTime ?? "5 min read";
 
 {
   variant === "list" && (
-    <article class="group hover-card relative mx-auto flex max-w-2xl flex-col rounded-2xl border border-zinc-200 p-5 transition-all duration-300 hover:bg-zinc-50/80 hover:shadow-md sm:mx-0 sm:p-8 dark:border-zinc-800 dark:hover:bg-zinc-900/50">
-      <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-zinc-50/0 to-zinc-100/0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 dark:from-zinc-900/0 dark:to-zinc-800/0" />
+    <article class="group relative mx-auto flex max-w-2xl flex-col sm:mx-0">
+      <div class="pointer-events-none absolute -inset-x-4 -inset-y-6 z-0 scale-95 bg-zinc-50 opacity-0 transition group-hover:scale-100 group-hover:opacity-100 sm:-inset-x-6 sm:rounded-2xl dark:bg-zinc-800/50" />
 
-      <div class="flex flex-col gap-5 sm:flex-row sm:gap-6">
+      <div class="relative z-10 flex flex-col gap-5 sm:flex-row sm:gap-6">
         {heroImage && (
-          <div class="mx-auto h-40 w-full flex-shrink-0 overflow-hidden rounded-md shadow-sm transition-all duration-300 group-hover:shadow-md sm:mx-0 sm:w-56">
+          <div class="mx-auto h-40 w-full flex-shrink-0 overflow-hidden rounded-md sm:mx-0 sm:w-56">
             <img
               src={heroImage}
               alt={title}
@@ -139,9 +134,7 @@ const estimatedReadingTime = readingTime ?? "5 min read";
           </div>
 
           <h2 class="mb-2 text-center text-xl font-semibold text-zinc-900 transition-colors group-hover:text-zinc-700 sm:mb-3 sm:text-left sm:text-2xl dark:text-zinc-100 dark:group-hover:text-zinc-300">
-            <a href={`${base}${slug}`} class="before:absolute before:inset-0">
-              {title}
-            </a>
+            <a href={`${base}${slug}`}>{title}</a>
           </h2>
 
           {description && (
@@ -152,7 +145,7 @@ const estimatedReadingTime = readingTime ?? "5 min read";
         </div>
       </div>
 
-      <div class="mt-4 flex flex-wrap items-end justify-center border-t border-zinc-100 pt-4 sm:justify-between dark:border-zinc-800">
+      <div class="relative z-10 mt-4 flex flex-wrap items-end justify-center border-t border-zinc-100 pt-4 sm:justify-between dark:border-zinc-800">
         {tags.length > 0 && (
           <div class="mb-3 flex flex-wrap justify-center gap-2 sm:mb-0 sm:justify-start">
             {tags.slice(0, 3).map((tag) => (
@@ -169,9 +162,7 @@ const estimatedReadingTime = readingTime ?? "5 min read";
         <div class="mx-auto sm:mr-0 sm:ml-auto">
           <a
             href={`${base}${slug}`}
-            class="inline-flex items-center text-sm font-medium text-zinc-700 transition-colors group-hover:text-zinc-900 dark:text-zinc-300 dark:group-hover:text-zinc-100"
-            aria-hidden="true"
-            tabindex="-1"
+            class="inline-flex items-center text-sm font-medium text-zinc-700 transition-colors hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
           >
             <span>Read article</span>
             <svg
@@ -195,19 +186,3 @@ const estimatedReadingTime = readingTime ?? "5 min read";
     </article>
   )
 }
-
-<style>
-  .hover-card {
-    transform: translateY(0);
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease,
-      background-color 0.3s ease;
-  }
-
-  @media (hover: hover) {
-    .hover-card:hover {
-      transform: translateY(-2px);
-    }
-  }
-</style>

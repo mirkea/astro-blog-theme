@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Tag from "../../components/Tag.astro";
+import TagPill from "../../components/Tag.astro";
 import PostCard from "../../components/PostCard.astro";
 import Button from "../../components/Button.astro";
 
@@ -42,7 +42,9 @@ const base = import.meta.env.BASE_URL;
           Back to all tags
         </Button>
 
-        <div class="mb-2 flex flex-col justify-center gap-4 sm:flex-row sm:items-center sm:justify-start">
+        <div
+          class="mb-2 flex flex-col justify-center gap-4 sm:flex-row sm:items-center sm:justify-start"
+        >
           <div
             class="tag-icon mx-auto flex h-12 w-12 items-center justify-center rounded-md bg-zinc-100 shadow-sm sm:mx-0 dark:bg-zinc-800"
           >
@@ -64,7 +66,9 @@ const base = import.meta.env.BASE_URL;
             </svg>
           </div>
 
-          <h1 class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">
+          <h1
+            class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100"
+          >
             <span class="relative">
               #{tag}
               <span class="absolute -bottom-1 left-0 h-1 w-full bg-zinc-200 dark:bg-zinc-700"
@@ -76,7 +80,9 @@ const base = import.meta.env.BASE_URL;
           </h1>
         </div>
 
-        <p class="mx-auto mt-4 max-w-2xl text-base text-zinc-600 sm:mx-0 sm:text-lg dark:text-zinc-400">
+        <p
+          class="mx-auto mt-4 max-w-2xl text-base text-zinc-600 sm:mx-0 sm:text-lg dark:text-zinc-400"
+        >
           Exploring <span class="font-medium text-zinc-900 dark:text-zinc-100"
             >{sortedPosts.length}</span
           > articles tagged with <span class="font-medium text-zinc-900 dark:text-zinc-100"
@@ -94,14 +100,14 @@ const base = import.meta.env.BASE_URL;
           </h2>
           <div class="flex flex-nowrap justify-center gap-2 sm:justify-start">
             {relatedTags.map((relatedTag) => (
-              <Tag tag={relatedTag} size="md" class="flex-shrink-0" />
+              <TagPill tag={relatedTag} size="md" class="flex-shrink-0" />
             ))}
           </div>
         </div>
       )
     }
 
-    <div class="relative space-y-6 sm:space-y-8">
+    <div class="relative space-y-12 sm:space-y-16">
       {
         sortedPosts.map((post) => (
           <PostCard
@@ -164,8 +170,12 @@ const base = import.meta.env.BASE_URL;
   }
 
   @keyframes expand {
-    from { width: 0; }
-    to { width: 50%; }
+    from {
+      width: 0;
+    }
+    to {
+      width: 50%;
+    }
   }
   .animate-expand {
     animation: expand 1s ease-out forwards;

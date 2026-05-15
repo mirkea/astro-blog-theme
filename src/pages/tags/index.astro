@@ -73,22 +73,10 @@ const sortedTags = tags
           </p>
         </div>
       ) : (
-        <div class="flex w-full justify-center">
-          <div class="tag-cloud hover-3d glass theme-transition-all relative w-full rounded-2xl border border-zinc-100 bg-white/50 p-4 backdrop-blur-sm sm:p-6 lg:p-8 dark:border-zinc-800 dark:bg-zinc-900/50">
-            <div class="theme-transition-bg absolute inset-0 opacity-5 dark:opacity-10" />
-            <div class="theme-transition-bg absolute -top-8 -right-8 h-32 w-32 rounded-full bg-gradient-to-br from-zinc-200/30 to-zinc-300/20 blur-xl dark:from-zinc-700/20 dark:to-zinc-800/10" />
-            <div class="theme-transition-bg absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-gradient-to-tl from-zinc-200/30 to-zinc-300/20 blur-xl dark:from-zinc-700/20 dark:to-zinc-800/10" />
-
-            <h2 class="theme-transition-color mb-4 text-center text-xl font-bold text-zinc-900 sm:mb-6 sm:text-2xl lg:mb-8 lg:text-3xl dark:text-zinc-100">
-              Popular Topics
-            </h2>
-
-            <div class="grid w-full grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-              {sortedTags.map((tag) => (
-                <TagCard tag={tag.name} count={tag.count} />
-              ))}
-            </div>
-          </div>
+        <div class="mx-auto grid max-w-xs grid-cols-1 gap-3 sm:max-w-none sm:grid-cols-2 sm:gap-4 md:grid-cols-3">
+          {sortedTags.map((tag) => (
+            <TagCard tag={tag.name} count={tag.count} />
+          ))}
         </div>
       )
     }
@@ -96,12 +84,6 @@ const sortedTags = tags
 </BaseLayout>
 
 <style>
-  .tag-cloud {
-    transform-style: preserve-3d;
-    perspective: 1000px;
-    transition: all var(--theme-transition);
-  }
-
   @keyframes underline {
     0% { transform: scaleX(0); }
     100% { transform: scaleX(1); }
@@ -109,13 +91,5 @@ const sortedTags = tags
 
   .animate-underline {
     animation: underline 1.5s ease-out forwards;
-  }
-
-  @supports (padding: max(0px)) {
-    .tag-cloud {
-      padding-left: max(1rem, env(safe-area-inset-left));
-      padding-right: max(1rem, env(safe-area-inset-right));
-      padding-bottom: max(1rem, env(safe-area-inset-bottom));
-    }
   }
 </style>

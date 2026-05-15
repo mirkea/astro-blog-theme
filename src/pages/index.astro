@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import PostCard from "../components/PostCard.astro";
 import Button from "../components/Button.astro";
+import TagCard from "../components/TagCard.astro";
 
 const base = import.meta.env.BASE_URL;
 
@@ -100,24 +101,7 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))].s
               const tagCount = allPosts.filter(
                 (post) => post.data.tags && post.data.tags.includes(tag),
               ).length;
-              return (
-                <a
-                  href={`${base}tags/${tag}`}
-                  class="group theme-transition-all flex min-h-[80px] flex-col rounded-md border border-zinc-200 p-3 transition-all duration-300 hover:bg-zinc-50 sm:min-h-[90px] sm:p-4 md:p-6 dark:border-zinc-800 dark:hover:bg-zinc-800/70"
-                >
-                  <div class="mb-2 flex items-start justify-between">
-                    <span class="theme-transition-color mr-2 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                      #{tag}
-                    </span>
-                    <span class="theme-transition-all flex-shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
-                      {tagCount} {tagCount === 1 ? "post" : "posts"}
-                    </span>
-                  </div>
-                  <p class="theme-transition-color mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                    Explore articles about {tag}
-                  </p>
-                </a>
-              );
+              return <TagCard tag={tag} count={tagCount} />;
             })}
           </div>
 
