@@ -139,7 +139,11 @@ if (heroImage) {
         if (!thread) return;
         thread.setAttribute("data-theme", theme);
         if ((window as any).CUSDIS) {
-          (window as any).CUSDIS.setTheme(theme);
+          try {
+            (window as any).CUSDIS.setTheme(theme);
+          } catch {
+            // iframe contentWindow not yet ready; theme will be applied on load
+          }
         }
       }
 
@@ -192,6 +196,7 @@ if (heroImage) {
 
         const attach = (iframe: HTMLIFrameElement) => {
           iframe.setAttribute("allowtransparency", "true");
+          iframe.setAttribute("title", "Comments");
           iframe.style.background = "transparent";
           const tryObserve = () => {
             try {

@@ -118,6 +118,7 @@ const socialLinks = SOCIAL_LINKS.filter((s) => s.name !== "Facebook");
                   alt="Album artwork"
                   class="h-full w-full object-cover transition-all duration-700 hover:scale-110"
                   id="track-image"
+                  loading="lazy"
                 />
               </div>
               <div class="min-w-0 flex-1">
@@ -149,6 +150,7 @@ const socialLinks = SOCIAL_LINKS.filter((s) => s.name !== "Facebook");
                 rel="noopener noreferrer"
                 id="spotify-link"
                 class="group ml-4 flex-shrink-0"
+                aria-label="Open on Spotify"
               >
                 <svg
                   class="h-8 w-8 text-[#1DB954] drop-shadow-sm filter transition-transform duration-300 group-hover:scale-110"
