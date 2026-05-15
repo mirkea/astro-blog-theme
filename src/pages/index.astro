@@ -5,6 +5,7 @@ import Layout from "../layouts/Layout.astro";
 import PostCard from "../components/PostCard.astro";
 import Button from "../components/Button.astro";
 import TagCard from "../components/TagCard.astro";
+import { AUTHOR_NAME, HERO_BIO, HERO_HEADLINE_LINE1, HERO_HEADLINE_LINE2, SITE_DESCRIPTION } from "../consts";
 
 const base = import.meta.env.BASE_URL;
 
@@ -18,17 +19,17 @@ const recentPosts = allPosts
 const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))].slice(0, 5);
 ---
 
-<Layout title="Mirkea | PM by trade. Builder by choice.">
+<Layout title={`${AUTHOR_NAME} | ${SITE_DESCRIPTION}`}>
   <section class="theme-transition-all px-4 py-10 sm:px-6 sm:py-16 md:py-20">
     <div class="relative mx-auto max-w-2xl">
       <div class="relative text-center sm:text-left">
         <h1
           class="theme-transition-color hero-text text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl md:text-5xl lg:text-6xl dark:text-zinc-100"
         >
-          <span class="block">PM by trade.</span>
+          <span class="block">{HERO_HEADLINE_LINE1}</span>
           <span class="relative mt-1 block">
             <span class="relative inline-block">
-              Builder by choice.
+              {HERO_HEADLINE_LINE2}
               <span
                 class="theme-transition-bg absolute -bottom-1 left-0 h-1 w-full origin-left transform bg-zinc-800 dark:bg-zinc-200"
               ></span>
@@ -38,8 +39,7 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))].s
         <p
           class="theme-transition-color mx-auto mt-4 max-w-lg text-base leading-relaxed text-zinc-600 sm:mx-0 sm:mt-6 sm:text-lg md:mt-8 dark:text-zinc-400"
         >
-          10 years in product, 20 in tech. Now I'm starting over - building a B2C product from idea
-          to launch, in public. Everything I learn ends up here.
+          {HERO_BIO}
         </p>
         <div
           class="mt-6 flex flex-wrap justify-center gap-3 sm:mt-8 sm:justify-start sm:gap-4 md:mt-10"

@@ -3,20 +3,15 @@ export const prerender = true;
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Button from "../components/Button.astro";
-
-const skills = [
-  { name: "Product Discovery", level: 95, icon: "search" },
-  { name: "Rapid Prototyping", level: 95, icon: "code" },
-  { name: "Production Management", level: 95, icon: "list" },
-  { name: "Stakeholder Alignment", level: 90, icon: "users" },
-  { name: "UX / Wireframing", level: 90, icon: "pen" },
-  { name: "HTML / CSS", level: 95, icon: "file-code" },
-  { name: "JavaScript", level: 75, icon: "braces" },
-  { name: "React", level: 80, icon: "atom" },
-  { name: "AI Workflows", level: 80, icon: "bot" },
-] as const;
-
-type SkillIcon = (typeof skills)[number]["icon"];
+import {
+  ABOUT_BIO,
+  ABOUT_SKILLS,
+  ABOUT_TAGLINE,
+  AUTHOR_FULL_NAME,
+  CONTACT_BLURB,
+  CONTACT_EMAIL,
+  type SkillIcon,
+} from "../consts";
 
 const iconPaths: Record<SkillIcon, string> = {
   search:
@@ -47,15 +42,14 @@ const iconPaths: Record<SkillIcon, string> = {
             class="theme-transition-color mb-4 text-3xl font-bold tracking-tight text-zinc-900 sm:mb-6 sm:text-4xl md:text-5xl dark:text-zinc-100"
           >
             Hello, I'm <span class="theme-transition-color text-zinc-900 dark:text-zinc-100"
-              >Braescu Mircea Cristian</span
+              >{AUTHOR_FULL_NAME}</span
             >
           </h1>
 
           <p
             class="theme-transition-color mb-6 text-lg leading-relaxed text-zinc-600 sm:mb-8 sm:text-xl dark:text-zinc-400"
           >
-            A product manager with 10 years of PM experience and 20 years of technical depth -
-            bridging discovery, design, and engineering.
+            {ABOUT_TAGLINE}
           </p>
         </div>
 
@@ -94,21 +88,14 @@ const iconPaths: Record<SkillIcon, string> = {
         <div
           class="prose markdown-content prose-zinc dark:prose-invert theme-transition-element max-w-none"
         >
-          <p class="theme-transition-color mb-4 text-base leading-relaxed sm:mb-6 sm:text-lg">
-            I'm a Product Manager who grew from Flash developer → UI designer → front-end developer
-            → PM through hands-on progression. I spent 5+ years as delivery PM on <a
-              href="https://www.verified.eu/"
-              target="_blank">verified.eu</a
-            > a B2B RegTech platform that was acquired for €31M, then led product discovery across multiple
-            AI-native and SaaS products as CPO at a product studio.
-          </p>
-
-          <p class="theme-transition-color mb-4 text-base leading-relaxed sm:mb-6 sm:text-lg">
-            I work at the intersection of product, design, and engineering: fluent in API docs, DB
-            schemas, and front-end code. I build AI-assisted discovery workflows and use rapid
-            prototyping as my primary alignment tool. I think in systems - user flows, data
-            structures, operational models - not just features.
-          </p>
+          {
+            ABOUT_BIO.map((paragraph) => (
+              <p
+                class="theme-transition-color mb-4 text-base leading-relaxed sm:mb-6 sm:text-lg"
+                set:html={paragraph}
+              />
+            ))
+          }
         </div>
       </div>
     </div>
@@ -123,7 +110,7 @@ const iconPaths: Record<SkillIcon, string> = {
 
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {
-          skills.map((skill) => (
+          ABOUT_SKILLS.map((skill) => (
             <div class="skill-card theme-transition-element rounded-md border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800/50 dark:hover:border-zinc-600">
               <div class="flex items-center gap-4 p-5">
                 <div class="theme-transition-bg theme-transition-color flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
@@ -176,11 +163,10 @@ const iconPaths: Record<SkillIcon, string> = {
       <p
         class="theme-transition-color mb-6 text-base text-zinc-600 sm:mb-8 sm:text-lg dark:text-zinc-400"
       >
-        I'm always open to new opportunities and collaborations. If you'd like to work together or
-        just say hello, feel free to reach out.
+        {CONTACT_BLURB}
       </p>
 
-      <Button href="mailto:mtz@outlook.com" variant="primary" class="sm:px-8 sm:py-4 sm:text-base">
+      <Button href={`mailto:${CONTACT_EMAIL}`} variant="primary" class="sm:px-8 sm:py-4 sm:text-base">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="mr-1 h-4 w-4 sm:h-5 sm:w-5"

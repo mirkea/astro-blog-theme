@@ -7,13 +7,14 @@ import "../styles/global.css";
 import "./styles/logo-anim.css";
 import "./styles/transitions.css";
 import "./styles/markdown.css";
+import { SITE_DESCRIPTION } from "../consts";
 
 export interface Props {
   title: string;
   description?: string;
 }
 
-const { title, description = "A minimalist personal blog" } = Astro.props;
+const { title, description = SITE_DESCRIPTION } = Astro.props;
 ---
 
 <!doctype html>
