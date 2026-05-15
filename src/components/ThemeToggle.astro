@@ -85,15 +85,16 @@
             e.stopPropagation();
 
             // Get click/touch position for radial animation
+            const event = e as MouseEvent | TouchEvent;
             let x, y;
-            if (e.type === "touchend" && e.changedTouches && e.changedTouches[0]) {
+            if (event.type === "touchend" && (event as TouchEvent).changedTouches?.[0]) {
               const rect = toggle.getBoundingClientRect();
-              x = e.changedTouches[0].clientX - rect.left;
-              y = e.changedTouches[0].clientY - rect.top;
+              x = (event as TouchEvent).changedTouches[0].clientX - rect.left;
+              y = (event as TouchEvent).changedTouches[0].clientY - rect.top;
             } else {
               const rect = toggle.getBoundingClientRect();
-              x = e.clientX - rect.left;
-              y = e.clientY - rect.top;
+              x = (event as MouseEvent).clientX - rect.left;
+              y = (event as MouseEvent).clientY - rect.top;
             }
 
             // Set the position variables for the radial gradient
@@ -101,7 +102,7 @@
             document.documentElement.style.setProperty("--y", `${y}px`);
 
             // Get the overlay element
-            const overlay = document.querySelector(".theme-switch-overlay");
+            const overlay = document.querySelector<HTMLElement>(".theme-switch-overlay");
 
             // Determine the new theme
             const isDark = document.documentElement.classList.contains("dark");

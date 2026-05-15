@@ -203,9 +203,9 @@ const base = import.meta.env.BASE_URL;
     }
 
     document.querySelectorAll('a[href^="#year-"]').forEach((anchor) => {
-      anchor.addEventListener("click", function (e) {
+      anchor.addEventListener("click", function (this: HTMLAnchorElement, e) {
         e.preventDefault();
-        const targetId = (this as HTMLAnchorElement).getAttribute("href")!;
+        const targetId = this.getAttribute("href")!;
         const targetElement = document.querySelector(targetId);
         if (targetElement) {
           window.scrollTo({ top: (targetElement as HTMLElement).offsetTop - 100, behavior: "smooth" });

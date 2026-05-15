@@ -1,10 +1,11 @@
 export const prerender = true;
 import rss from "@astrojs/rss";
+import type { APIContext } from "astro";
 import { getCollection } from "astro:content";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 
 // Change back to uppercase GET to match what Astro is expecting in newer versions
-export async function GET(context) {
+export async function GET(context: APIContext) {
   const posts = await getCollection("blog");
 
   // Sort posts by date in descending order
@@ -15,7 +16,7 @@ export async function GET(context) {
   return rss({
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    site: context.site,
+    site: context.site!,
     items: sortedPosts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.pubDate,

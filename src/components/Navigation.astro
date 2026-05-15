@@ -201,22 +201,17 @@ const pathname = new URL(Astro.request.url).pathname;
 
     // Add smooth animation to header on scroll
     const header = document.querySelector("header");
-    let lastScrollY = window.scrollY;
 
     window.addEventListener("scroll", () => {
       if (!header) return;
 
-      const currentScrollY = window.scrollY;
-
       // // Add shadow on scroll
+      // const currentScrollY = window.scrollY;
       // if (currentScrollY > 10) {
       //   header.classList.add("shadow-sm");
       // } else {
       //   header.classList.remove("shadow-sm");
       // }
-
-      // Update last scroll position
-      lastScrollY = currentScrollY;
     });
   });
 </script>

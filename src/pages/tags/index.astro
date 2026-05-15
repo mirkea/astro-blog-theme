@@ -24,7 +24,7 @@ const sortedTags = tags
         <span class="relative inline-block">
           <span class="relative inline-block">
             <span
-              class="theme-transition-bg absolute -inset-1 rounded-lg bg-gradient-to-r from-zinc-200/50 to-zinc-300/50 blur-sm dark:from-zinc-800/50 dark:to-zinc-700/50"
+              class="theme-transition-bg absolute -inset-1 rounded-lg bg-linear-to-r from-zinc-200/50 to-zinc-300/50 blur-sm dark:from-zinc-800/50 dark:to-zinc-700/50"
             ></span>
             <span class="relative">Explore</span>
           </span>
@@ -32,7 +32,7 @@ const sortedTags = tags
           <span class="relative inline-block">
             Topics
             <span
-              class="animate-underline theme-transition-bg absolute -bottom-1 left-0 h-0.5 w-full origin-left transform bg-gradient-to-r from-zinc-400 to-zinc-600 sm:-bottom-2 sm:h-1 dark:from-zinc-600 dark:to-zinc-400"
+              class="animate-underline theme-transition-bg absolute -bottom-1 left-0 h-0.5 w-full origin-left transform bg-linear-to-r from-zinc-400 to-zinc-600 sm:-bottom-2 sm:h-1 dark:from-zinc-600 dark:to-zinc-400"
             ></span>
           </span>
         </span>
@@ -85,8 +85,12 @@ const sortedTags = tags
 
 <style>
   @keyframes underline {
-    0% { transform: scaleX(0); }
-    100% { transform: scaleX(1); }
+    0% {
+      transform: scaleX(0);
+    }
+    100% {
+      transform: scaleX(1);
+    }
   }
 
   .animate-underline {

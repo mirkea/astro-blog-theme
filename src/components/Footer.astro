@@ -52,7 +52,7 @@ const socialLinks = SOCIAL_LINKS.filter((s) => s.name !== "Facebook");
                   class="group relative flex size-11 transform items-center justify-center rounded-full bg-zinc-100 text-zinc-500 transition-all duration-300 hover:text-zinc-900 hover:ring-2 hover:ring-zinc-300 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:ring-zinc-700"
                   aria-label={social.name}
                 >
-                  <span class="absolute inset-0 rounded-full bg-gradient-to-br from-zinc-200 to-zinc-300 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-zinc-700 dark:to-zinc-600" />
+                  <span class="absolute inset-0 rounded-full bg-linear-to-br from-zinc-200 to-zinc-300 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-zinc-700 dark:to-zinc-600" />
                   <svg
                     class="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:scale-110"
                     fill="currentColor"
@@ -96,7 +96,7 @@ const socialLinks = SOCIAL_LINKS.filter((s) => s.name !== "Facebook");
         <!-- Now Playing Spotify section with enhanced design -->
         <div class="col-span-1 md:col-span-6">
           <h3
-            class="theme-transition-color relative flex inline-block items-center pb-2 text-sm font-semibold tracking-wider text-zinc-900 uppercase after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-8 after:bg-zinc-300 after:content-[''] dark:text-zinc-100 dark:after:bg-zinc-700"
+            class="theme-transition-color relative flex items-center pb-2 text-sm font-semibold tracking-wider text-zinc-900 uppercase after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-8 after:bg-zinc-300 after:content-[''] dark:text-zinc-100 dark:after:bg-zinc-700"
           >
             <span
               id="now-playing-dot"
@@ -110,7 +110,7 @@ const socialLinks = SOCIAL_LINKS.filter((s) => s.name !== "Facebook");
           >
             <div class="flex items-center">
               <div
-                class="mr-4 h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-zinc-200 transition-all duration-500 hover:shadow-xl dark:bg-zinc-700"
+                class="mr-4 h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-zinc-200 transition-all duration-500 hover:shadow-xl dark:bg-zinc-700"
                 id="track-artwork"
               >
                 <img
@@ -149,7 +149,7 @@ const socialLinks = SOCIAL_LINKS.filter((s) => s.name !== "Facebook");
                 target="_blank"
                 rel="noopener noreferrer"
                 id="spotify-link"
-                class="group ml-4 flex-shrink-0"
+                class="group ml-4 shrink-0"
                 aria-label="Open on Spotify"
               >
                 <svg
@@ -228,12 +228,11 @@ const socialLinks = SOCIAL_LINKS.filter((s) => s.name !== "Facebook");
   </div>
 </footer>
 
-<script define:vars={{ spotifyWorkerUrl }}>
+<script is:inline define:vars={{ spotifyWorkerUrl }}>
   // Cache for current track
   let currentTrackId = null;
   let progressInterval = null;
   let currentProgress = 0;
-  let trackDuration = 0;
 
   // Function to format time in MM:SS
   function formatTime(ms) {
@@ -322,7 +321,6 @@ const socialLinks = SOCIAL_LINKS.filter((s) => s.name !== "Facebook");
     }
 
     currentProgress = startMs;
-    trackDuration = durationMs;
     const startTime = Date.now();
 
     // Update progress every 100ms for smooth animation

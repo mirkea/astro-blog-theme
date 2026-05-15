@@ -132,17 +132,4 @@ const shareLinks = SOCIAL_LINKS.filter((s) => s.shareUrlTemplate).map((s) => ({
   document.addEventListener("astro:page-load", setupSpaTransitions);
   document.addEventListener("page-transition-complete", setupSpaTransitions);
 
-  // Dispatch custom event when share action is completed
-  function notifyShareComplete() {
-    document.dispatchEvent(new CustomEvent("share-action-complete"));
-  }
-
-  // Add analytics tracking for share actions if needed
-  function trackShareAction(platform) {
-    // You can implement analytics tracking here
-    console.log(`Shared on ${platform}`);
-
-    // Notify other components that share action is complete
-    notifyShareComplete();
-  }
 </script>

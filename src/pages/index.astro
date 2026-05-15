@@ -79,7 +79,7 @@ const allTags = [...new Set(allPosts.flatMap((post) => post.data.tags || []))].s
                 post.data.readingTime || `${Math.ceil(post.body.length / 2000)} min read`
               }
               tags={post.data.tags}
-              heroImage={post.data.image}
+              heroImage={post.data.heroImage}
               index={index}
             />
           ))

@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
 import Background from "../components/Background.astro";
@@ -51,18 +51,19 @@ const { title, description = "A minimalist personal blog" } = Astro.props;
       rel="stylesheet"
     />
     <script
+      is:inline
       defer
       src="https://cloud.umami.is/script.js"
       data-website-id="67c800ae-6f9e-4a16-b173-5f79d2d97ee5"></script>
 
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body
     class="flex min-h-screen flex-col bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
   >
     <Background />
 
-    <div class="mx-auto w-full max-w-3xl flex-grow px-4 sm:px-6">
+    <div class="mx-auto w-full max-w-3xl grow px-4 sm:px-6">
       <Navigation />
       <main class="py-12">
         <slot />

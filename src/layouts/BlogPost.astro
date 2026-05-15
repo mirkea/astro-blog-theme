@@ -72,7 +72,7 @@ if (heroImage) {
     {
       heroImage && (
         <div class="relative mb-8 overflow-hidden rounded-md shadow-lg">
-          <div class="aspect-[16/9] w-full">
+          <div class="aspect-video w-full">
             <img
               src={heroImageUrl}
               alt={title}
@@ -82,7 +82,7 @@ if (heroImage) {
               height="504"
             />
           </div>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+          <div class="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
         </div>
       )
     }
@@ -130,7 +130,7 @@ if (heroImage) {
         }
       })();
     </script>
-    <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+    <script is:inline async defer src="https://cusdis.com/js/cusdis.es.js"></script>
     <script>
       function syncCusdisTheme() {
         const isDark = document.documentElement.classList.contains("dark");
@@ -201,13 +201,18 @@ if (heroImage) {
           const tryObserve = () => {
             try {
               const body = (iframe.contentDocument as Document)?.body;
-              if (!body) { setTimeout(tryObserve, 100); return; }
+              if (!body) {
+                setTimeout(tryObserve, 100);
+                return;
+              }
               injectCusdisStyles(iframe.contentDocument as Document);
               new ResizeObserver(() => {
                 const h = (iframe.contentDocument as Document).body.scrollHeight;
                 if (h > 0) iframe.style.height = h + "px";
               }).observe(body);
-            } catch { setTimeout(tryObserve, 200); }
+            } catch {
+              setTimeout(tryObserve, 200);
+            }
           };
           iframe.addEventListener("load", tryObserve);
           tryObserve();
@@ -225,7 +230,10 @@ if (heroImage) {
         });
         mo.observe(thread, { childList: true });
         const existing = thread.querySelector("iframe") as HTMLIFrameElement | null;
-        if (existing) { attach(existing); mo.disconnect(); }
+        if (existing) {
+          attach(existing);
+          mo.disconnect();
+        }
       }
 
       document.addEventListener("DOMContentLoaded", watchCusdisHeight);
