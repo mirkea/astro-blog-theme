@@ -1,0 +1,39 @@
+---
+export interface Props {
+  tag: string;
+  count: number;
+}
+
+const { tag, count } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<a
+  href={`${base}tags/${tag}`}
+  class="group theme-transition-element theme-ripple relative min-w-0 overflow-hidden rounded-xl border border-zinc-200 transition-all duration-300 hover:scale-[1.03] hover:border-zinc-300 hover:shadow-md active:scale-95 dark:border-zinc-800 dark:hover:border-zinc-700"
+>
+  <div
+    class="theme-transition-bg absolute inset-0 bg-gradient-to-br from-zinc-50/90 to-zinc-100/90 transition-opacity group-hover:opacity-95 dark:from-zinc-800/90 dark:to-zinc-900/90"
+  >
+  </div>
+
+  <div class="relative flex w-full items-center gap-3 px-3 py-3 sm:px-4 sm:py-4">
+    <div
+      class="theme-transition-all flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-100 text-zinc-700 shadow-sm sm:h-9 sm:w-9 dark:bg-zinc-800 dark:text-zinc-300"
+    >
+      <span class="text-sm font-semibold sm:text-base">#</span>
+    </div>
+
+    <div class="min-w-0 flex-1">
+      <h3
+        class="theme-transition-color truncate text-sm font-bold text-zinc-900 group-hover:text-zinc-700 dark:text-zinc-100 dark:group-hover:text-zinc-300"
+        title={tag}
+      >
+        {tag}
+      </h3>
+      <p class="theme-transition-color text-xs text-zinc-500 dark:text-zinc-400">
+        {count} article{count !== 1 ? "s" : ""}
+      </p>
+    </div>
+  </div>
+</a>

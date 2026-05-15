@@ -1,0 +1,111 @@
+---
+export interface Props {
+  href?: string;
+  variant?: "primary" | "secondary" | "ghost" | "chip";
+  icon?: "arrow-right" | "arrow-left";
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, variant = "primary", icon, class: className = "", ...rest } = Astro.props;
+
+const variantClasses: Record<string, string> = {
+  primary:
+    "inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-6 py-3 text-sm font-medium text-zinc-100 shadow-sm transition-all hover:bg-zinc-800 hover:shadow-md dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
+  secondary:
+    "inline-flex items-center gap-2 rounded-lg border border-zinc-300 px-6 py-3 text-sm font-medium text-zinc-700 shadow-sm transition-all hover:bg-zinc-100 hover:shadow-md dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800",
+  ghost:
+    "group relative inline-flex min-h-[44px] items-center gap-2 text-sm font-medium text-zinc-900 transition-colors hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300",
+  chip: "inline-flex items-center gap-2 rounded-md bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-800 transition-all hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700",
+};
+
+const cls = `${variantClasses[variant ?? "primary"]} ${className}`;
+---
+
+{/* Arrow icons rendered after slot content */}
+
+{
+  href ? (
+    <a href={href} class={cls} {...rest}>
+      <slot />
+      {icon === "arrow-right" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-4 w-4 flex-shrink-0"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+          />
+        </svg>
+      )}
+      {icon === "arrow-left" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-4 w-4 flex-shrink-0"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+          />
+        </svg>
+      )}
+      {variant === "ghost" && (
+        <span class="theme-transition-bg absolute -bottom-1 left-0 h-0.5 w-0 bg-zinc-800 transition-all duration-300 group-hover:w-full dark:bg-zinc-200" />
+      )}
+    </a>
+  ) : (
+    <button class={cls} {...rest}>
+      <slot />
+      {icon === "arrow-right" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-4 w-4 flex-shrink-0"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+          />
+        </svg>
+      )}
+      {icon === "arrow-left" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-4 w-4 flex-shrink-0"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+          />
+        </svg>
+      )}
+      {variant === "ghost" && (
+        <span class="theme-transition-bg absolute -bottom-1 left-0 h-0.5 w-0 bg-zinc-800 transition-all duration-300 group-hover:w-full dark:bg-zinc-200" />
+      )}
+    </button>
+  )
+}

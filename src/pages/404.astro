@@ -1,14 +1,13 @@
 ---
 export const prerender = true;
 import Layout from "../layouts/Layout.astro";
+import Button from "../components/Button.astro";
 ---
 
 <Layout title="404 - Page Not Found">
   <div
     class="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden px-4 py-20 text-center"
   >
-
-    <!-- Main content with animation -->
     <div class="relative z-10 mx-auto max-w-xl">
       <div class="glitch-wrapper">
         <h1
@@ -28,34 +27,7 @@ import Layout from "../layouts/Layout.astro";
       </p>
 
       <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-        <a
-          href={import.meta.env.BASE_URL}
-          class="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-zinc-900 px-6 py-3 text-zinc-100 shadow-lg transition-all duration-300 hover:bg-zinc-800 hover:shadow-xl dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-        >
-          <span
-            class="absolute inset-0 z-0 bg-gradient-to-r from-zinc-700 to-zinc-900 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-zinc-300 dark:to-zinc-100"
-          ></span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            stroke="currentColor"
-            class="relative z-10 h-5 w-5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-            ></path>
-          </svg>
-          <span class="relative z-10 font-medium">Return Home</span>
-        </a>
-
-        <button
-          id="back-button"
-          class="group inline-flex items-center gap-2 rounded-lg border border-zinc-300 px-6 py-3 text-zinc-700 shadow-sm transition-all duration-300 hover:bg-zinc-100 hover:shadow-md dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
-        >
+        <Button href={import.meta.env.BASE_URL} variant="primary">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -63,17 +35,36 @@ import Layout from "../layouts/Layout.astro";
             stroke-width="2"
             stroke="currentColor"
             class="h-5 w-5"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+            ></path>
+          </svg>
+          Return Home
+        </Button>
+
+        <Button id="back-button" variant="secondary">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="h-5 w-5"
+            aria-hidden="true"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
           </svg>
-          <span class="font-medium">Go Back</span>
-        </button>
+          Go Back
+        </Button>
       </div>
 
-      <!-- Random fun fact -->
       <div
         class="mx-auto mt-16 max-w-md rounded-md border border-zinc-100 bg-zinc-50 p-6 shadow-sm backdrop-blur-sm dark:border-zinc-700/50 dark:bg-zinc-800/50"
       >
@@ -90,12 +81,8 @@ import Layout from "../layouts/Layout.astro";
 </Layout>
 
 <script>
-  // Go back functionality
-  document.getElementById("back-button")?.addEventListener("click", () => {
-    window.history.back();
-  });
+  document.getElementById("back-button")?.addEventListener("click", () => window.history.back());
 
-  // Array of fun 404 facts
   const funFacts = [
     "The 404 error code originated when CERN's web server displayed room 404 (their server room) as the error message when a file wasn't found.",
     "In internet slang, '404' has become shorthand for something that's missing or someone who's clueless.",
@@ -107,77 +94,11 @@ import Layout from "../layouts/Layout.astro";
     "The most common cause of 404 errors is mistyped URLs.",
   ];
 
-  // Display a random fun fact
-  const funFactElement = document.getElementById("fun-fact");
-  if (funFactElement) {
-    const randomFact = funFacts[Math.floor(Math.random() * funFacts.length)];
-    funFactElement.textContent = randomFact;
-  }
-
-  // Handle SPA transitions for 404 page
-  function setupSPATransitions() {
-    // Handle all internal links for SPA transitions
-    document.querySelectorAll('a[href^="/"]').forEach((link) => {
-      // Skip links that are anchor links, external links, or already processed
-      if (
-        link.getAttribute("href").includes("#") ||
-        link.getAttribute("target") === "_blank" ||
-        link.hasAttribute("data-spa-handled")
-      ) {
-        return;
-      }
-
-      // Mark as handled to avoid duplicate listeners
-      link.setAttribute("data-spa-handled", "true");
-
-      link.addEventListener("click", (e) => {
-        // Don't handle if modifier keys are pressed (for opening in new tab, etc.)
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
-          return;
-        }
-
-        e.preventDefault();
-        const targetHref = link.getAttribute("href");
-
-        // Trigger page transition animation
-        const pageTransition = document.getElementById("page-transition");
-        if (pageTransition) {
-          pageTransition.classList.remove("opacity-0");
-          pageTransition.classList.add("opacity-100");
-
-          // Navigate after transition effect
-          setTimeout(() => {
-            window.location.href = targetHref;
-          }, 300);
-        } else {
-          // Fallback if transition element doesn't exist
-          window.location.href = targetHref;
-        }
-      });
-    });
-
-    // Re-initialize back button after SPA navigation
-    const backButton = document.getElementById("back-button");
-    if (backButton) {
-      backButton.addEventListener("click", () => {
-        window.history.back();
-      });
-    }
-  }
-
-  // Initialize on first load
-  document.addEventListener("DOMContentLoaded", setupSPATransitions);
-
-  // Re-initialize when content changes via Astro's view transitions
-  document.addEventListener("astro:page-load", setupSPATransitions);
-
-  // For compatibility with custom transition system
-  document.addEventListener("page-transition-complete", setupSPATransitions);
+  const el = document.getElementById("fun-fact");
+  if (el) el.textContent = funFacts[Math.floor(Math.random() * funFacts.length)];
 </script>
 
 <style>
-
-  /* Glitch effect for 404 text */
   .glitch-wrapper {
     position: relative;
     display: inline-block;
@@ -215,212 +136,64 @@ import Layout from "../layouts/Layout.astro";
   }
 
   @keyframes glitch-anim {
-    0% {
-      clip: rect(31px, 9999px, 94px, 0);
-      transform: skew(0.85deg);
-    }
-    5% {
-      clip: rect(70px, 9999px, 71px, 0);
-      transform: skew(0.17deg);
-    }
-    10% {
-      clip: rect(9px, 9999px, 85px, 0);
-      transform: skew(0.4deg);
-    }
-    15% {
-      clip: rect(47px, 9999px, 18px, 0);
-      transform: skew(0.22deg);
-    }
-    20% {
-      clip: rect(7px, 9999px, 78px, 0);
-      transform: skew(0.96deg);
-    }
-    25% {
-      clip: rect(53px, 9999px, 54px, 0);
-      transform: skew(0.05deg);
-    }
-    30% {
-      clip: rect(84px, 9999px, 52px, 0);
-      transform: skew(0.94deg);
-    }
-    35% {
-      clip: rect(46px, 9999px, 7px, 0);
-      transform: skew(0.01deg);
-    }
-    40% {
-      clip: rect(2px, 9999px, 66px, 0);
-      transform: skew(0.66deg);
-    }
-    45% {
-      clip: rect(34px, 9999px, 33px, 0);
-      transform: skew(0.52deg);
-    }
-    50% {
-      clip: rect(80px, 9999px, 73px, 0);
-      transform: skew(0.9deg);
-    }
-    55% {
-      clip: rect(8px, 9999px, 81px, 0);
-      transform: skew(0.3deg);
-    }
-    60% {
-      clip: rect(10px, 9999px, 86px, 0);
-      transform: skew(0.85deg);
-    }
-    65% {
-      clip: rect(36px, 9999px, 25px, 0);
-      transform: skew(0.28deg);
-    }
-    70% {
-      clip: rect(75px, 9999px, 31px, 0);
-      transform: skew(0.46deg);
-    }
-    75% {
-      clip: rect(46px, 9999px, 87px, 0);
-      transform: skew(0.44deg);
-    }
-    80% {
-      clip: rect(19px, 9999px, 40px, 0);
-      transform: skew(0.07deg);
-    }
-    85% {
-      clip: rect(85px, 9999px, 88px, 0);
-      transform: skew(0.71deg);
-    }
-    90% {
-      clip: rect(1px, 9999px, 89px, 0);
-      transform: skew(0.76deg);
-    }
-    95% {
-      clip: rect(44px, 9999px, 25px, 0);
-      transform: skew(0.58deg);
-    }
-    100% {
-      clip: rect(31px, 9999px, 26px, 0);
-      transform: skew(0.6deg);
-    }
+    0% { clip: rect(31px, 9999px, 94px, 0); transform: skew(0.85deg); }
+    5% { clip: rect(70px, 9999px, 71px, 0); transform: skew(0.17deg); }
+    10% { clip: rect(9px, 9999px, 85px, 0); transform: skew(0.4deg); }
+    15% { clip: rect(47px, 9999px, 18px, 0); transform: skew(0.22deg); }
+    20% { clip: rect(7px, 9999px, 78px, 0); transform: skew(0.96deg); }
+    25% { clip: rect(53px, 9999px, 54px, 0); transform: skew(0.05deg); }
+    30% { clip: rect(84px, 9999px, 52px, 0); transform: skew(0.94deg); }
+    35% { clip: rect(46px, 9999px, 7px, 0); transform: skew(0.01deg); }
+    40% { clip: rect(2px, 9999px, 66px, 0); transform: skew(0.66deg); }
+    45% { clip: rect(34px, 9999px, 33px, 0); transform: skew(0.52deg); }
+    50% { clip: rect(80px, 9999px, 73px, 0); transform: skew(0.9deg); }
+    55% { clip: rect(8px, 9999px, 81px, 0); transform: skew(0.3deg); }
+    60% { clip: rect(10px, 9999px, 86px, 0); transform: skew(0.85deg); }
+    65% { clip: rect(36px, 9999px, 25px, 0); transform: skew(0.28deg); }
+    70% { clip: rect(75px, 9999px, 31px, 0); transform: skew(0.46deg); }
+    75% { clip: rect(46px, 9999px, 87px, 0); transform: skew(0.44deg); }
+    80% { clip: rect(19px, 9999px, 40px, 0); transform: skew(0.07deg); }
+    85% { clip: rect(85px, 9999px, 88px, 0); transform: skew(0.71deg); }
+    90% { clip: rect(1px, 9999px, 89px, 0); transform: skew(0.76deg); }
+    95% { clip: rect(44px, 9999px, 25px, 0); transform: skew(0.58deg); }
+    100% { clip: rect(31px, 9999px, 26px, 0); transform: skew(0.6deg); }
   }
 
   @keyframes glitch-anim2 {
-    0% {
-      clip: rect(65px, 9999px, 65px, 0);
-      transform: skew(0.16deg);
-    }
-    5% {
-      clip: rect(8px, 9999px, 42px, 0);
-      transform: skew(0.65deg);
-    }
-    10% {
-      clip: rect(64px, 9999px, 30px, 0);
-      transform: skew(0.42deg);
-    }
-    15% {
-      clip: rect(29px, 9999px, 49px, 0);
-      transform: skew(0.05deg);
-    }
-    20% {
-      clip: rect(25px, 9999px, 56px, 0);
-      transform: skew(0.09deg);
-    }
-    25% {
-      clip: rect(76px, 9999px, 98px, 0);
-      transform: skew(0.79deg);
-    }
-    30% {
-      clip: rect(72px, 9999px, 3px, 0);
-      transform: skew(0.12deg);
-    }
-    35% {
-      clip: rect(20px, 9999px, 60px, 0);
-      transform: skew(0.09deg);
-    }
-    40% {
-      clip: rect(61px, 9999px, 47px, 0);
-      transform: skew(0.45deg);
-    }
-    45% {
-      clip: rect(29px, 9999px, 69px, 0);
-      transform: skew(0.09deg);
-    }
-    50% {
-      clip: rect(82px, 9999px, 96px, 0);
-      transform: skew(0.05deg);
-    }
-    55% {
-      clip: rect(33px, 9999px, 91px, 0);
-      transform: skew(0.16deg);
-    }
-    60% {
-      clip: rect(56px, 9999px, 23px, 0);
-      transform: skew(0.01deg);
-    }
-    65% {
-      clip: rect(46px, 9999px, 21px, 0);
-      transform: skew(0.89deg);
-    }
-    70% {
-      clip: rect(50px, 9999px, 1px, 0);
-      transform: skew(0.85deg);
-    }
-    75% {
-      clip: rect(82px, 9999px, 33px, 0);
-      transform: skew(0.87deg);
-    }
-    80% {
-      clip: rect(94px, 9999px, 46px, 0);
-      transform: skew(0.64deg);
-    }
-    85% {
-      clip: rect(48px, 9999px, 95px, 0);
-      transform: skew(0.43deg);
-    }
-    90% {
-      clip: rect(60px, 9999px, 10px, 0);
-      transform: skew(0.29deg);
-    }
-    95% {
-      clip: rect(85px, 9999px, 62px, 0);
-      transform: skew(0.66deg);
-    }
-    100% {
-      clip: rect(61px, 9999px, 58px, 0);
-      transform: skew(0.74deg);
-    }
+    0% { clip: rect(65px, 9999px, 65px, 0); transform: skew(0.16deg); }
+    5% { clip: rect(8px, 9999px, 42px, 0); transform: skew(0.65deg); }
+    10% { clip: rect(64px, 9999px, 30px, 0); transform: skew(0.42deg); }
+    15% { clip: rect(29px, 9999px, 49px, 0); transform: skew(0.05deg); }
+    20% { clip: rect(25px, 9999px, 56px, 0); transform: skew(0.09deg); }
+    25% { clip: rect(76px, 9999px, 98px, 0); transform: skew(0.79deg); }
+    30% { clip: rect(72px, 9999px, 3px, 0); transform: skew(0.12deg); }
+    35% { clip: rect(20px, 9999px, 60px, 0); transform: skew(0.09deg); }
+    40% { clip: rect(61px, 9999px, 47px, 0); transform: skew(0.45deg); }
+    45% { clip: rect(29px, 9999px, 69px, 0); transform: skew(0.09deg); }
+    50% { clip: rect(82px, 9999px, 96px, 0); transform: skew(0.05deg); }
+    55% { clip: rect(33px, 9999px, 91px, 0); transform: skew(0.16deg); }
+    60% { clip: rect(56px, 9999px, 23px, 0); transform: skew(0.01deg); }
+    65% { clip: rect(46px, 9999px, 21px, 0); transform: skew(0.89deg); }
+    70% { clip: rect(50px, 9999px, 1px, 0); transform: skew(0.85deg); }
+    75% { clip: rect(82px, 9999px, 33px, 0); transform: skew(0.87deg); }
+    80% { clip: rect(94px, 9999px, 46px, 0); transform: skew(0.64deg); }
+    85% { clip: rect(48px, 9999px, 95px, 0); transform: skew(0.43deg); }
+    90% { clip: rect(60px, 9999px, 10px, 0); transform: skew(0.29deg); }
+    95% { clip: rect(85px, 9999px, 62px, 0); transform: skew(0.66deg); }
+    100% { clip: rect(61px, 9999px, 58px, 0); transform: skew(0.74deg); }
   }
 
   @keyframes glitch-skew {
-    0% {
-      transform: skew(-1deg);
-    }
-    10% {
-      transform: skew(0deg);
-    }
-    20% {
-      transform: skew(0.5deg);
-    }
-    30% {
-      transform: skew(-0.5deg);
-    }
-    40% {
-      transform: skew(0.2deg);
-    }
-    50% {
-      transform: skew(0deg);
-    }
-    60% {
-      transform: skew(-0.5deg);
-    }
-    70% {
-      transform: skew(0.8deg);
-    }
-    80% {
-      transform: skew(-0.2deg);
-    }
-    90% {
-      transform: skew(0.5deg);
-    }
-    100% {
-      transform: skew(0deg);
-    }
+    0% { transform: skew(-1deg); }
+    10% { transform: skew(0deg); }
+    20% { transform: skew(0.5deg); }
+    30% { transform: skew(-0.5deg); }
+    40% { transform: skew(0.2deg); }
+    50% { transform: skew(0deg); }
+    60% { transform: skew(-0.5deg); }
+    70% { transform: skew(0.8deg); }
+    80% { transform: skew(-0.2deg); }
+    90% { transform: skew(0.5deg); }
+    100% { transform: skew(0deg); }
   }
 </style>

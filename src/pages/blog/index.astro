@@ -3,31 +3,31 @@ export const prerender = true;
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PostCard from "../../components/PostCard.astro";
+import Tag from "../../components/Tag.astro";
+import FormattedDate from "../../components/FormattedDate.astro";
 
 const allPosts = (await getCollection("blog")) || [];
 const sortedPosts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-// Group posts by year for timeline effect
-const postsByYear = sortedPosts.reduce((acc, post) => {
-  const year = new Date(post.data.pubDate).getFullYear();
-  if (!acc[year]) acc[year] = [];
-  acc[year].push(post);
-  return acc;
-}, {});
+const postsByYear = sortedPosts.reduce(
+  (acc, post) => {
+    const year = new Date(post.data.pubDate).getFullYear();
+    if (!acc[year]) acc[year] = [];
+    acc[year].push(post);
+    return acc;
+  },
+  {} as Record<number, typeof sortedPosts>,
+);
 
-const years = Object.keys(postsByYear).sort((a, b) => b - a);
+const years = Object.keys(postsByYear)
+  .map(Number)
+  .sort((a, b) => b - a);
 
-// Get total post count
-const totalPosts = sortedPosts.length;
-
-// Get unique tags for search suggestions
-const allTags = [...new Set(sortedPosts.flatMap((post) => post.data.tags || []))];
 const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title="Blog">
   <div class="mx-auto w-full max-w-6xl px-4 pt-10 sm:px-6 sm:pt-12">
-    {/* Enhanced header with search - improved responsive spacing */}
     <div class="relative mb-12 sm:mb-20">
       <div class="relative text-center">
         <h1
@@ -35,7 +35,6 @@ const base = import.meta.env.BASE_URL;
         >
           Journal
         </h1>
-
         <p
           class="mx-auto mb-6 max-w-2xl text-sm text-zinc-600 sm:mb-10 sm:text-base dark:text-zinc-400"
         >
@@ -44,9 +43,8 @@ const base = import.meta.env.BASE_URL;
       </div>
     </div>
 
-    {/* Improved grid layout for better mobile experience */}
     <div class="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-12">
-      {/* Featured post (if exists) - improved mobile layout */}
+      {/* Featured post */}
       {
         sortedPosts.length > 0 && (
           <div class="mb-8 sm:mb-12 md:col-span-12">
@@ -59,6 +57,8 @@ const base = import.meta.env.BASE_URL;
                       alt={sortedPosts[0].data.title}
                       class="h-full w-full object-cover grayscale transition-all duration-700 group-hover:scale-105 hover:grayscale-0"
                       loading="eager"
+                      width="600"
+                      height="384"
                     />
                   </div>
                 )}
@@ -68,13 +68,7 @@ const base = import.meta.env.BASE_URL;
                     <span class="font-medium tracking-wider uppercase">Featured</span>
                     <span class="h-px w-6 bg-zinc-300 sm:w-8 dark:bg-zinc-700" />
                     {sortedPosts[0].data.pubDate && (
-                      <time datetime={sortedPosts[0].data.pubDate.toISOString()}>
-                        {sortedPosts[0].data.pubDate.toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
-                      </time>
+                      <FormattedDate date={sortedPosts[0].data.pubDate} />
                     )}
                   </div>
 
@@ -91,7 +85,6 @@ const base = import.meta.env.BASE_URL;
                     {sortedPosts[0].data.description}
                   </p>
 
-                  {/* Improved mobile layout for featured post metadata */}
                   <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:justify-start">
                     <span class="theme-transition-all rounded-full border border-zinc-300 px-3 py-1 text-xs font-medium text-zinc-500 dark:border-zinc-600 dark:text-zinc-400">
                       {sortedPosts[0].data.readingTime || "5 min read"}
@@ -100,12 +93,7 @@ const base = import.meta.env.BASE_URL;
                     {sortedPosts[0].data.tags && (
                       <div class="flex flex-wrap justify-center gap-2 md:justify-start">
                         {sortedPosts[0].data.tags.slice(0, 3).map((tag) => (
-                          <a
-                            href={`${base}tags/${tag}`}
-                            class="theme-transition-all inline-flex items-center rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-800 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
-                          >
-                            #{tag}
-                          </a>
+                          <Tag tag={tag} size="md" />
                         ))}
                         {sortedPosts[0].data.tags.length > 3 && (
                           <span class="theme-transition-all inline-flex items-center rounded-full bg-zinc-50 px-2 py-1 text-xs font-medium text-zinc-500 dark:bg-zinc-800/50 dark:text-zinc-400">
@@ -122,7 +110,7 @@ const base = import.meta.env.BASE_URL;
         )
       }
 
-      {/* Improved sidebar for mobile */}
+      {/* Sidebar — year archive */}
       <div class="relative md:col-span-3">
         <div class="mb-8 space-y-4 md:sticky md:top-24 md:mb-0">
           <h3
@@ -131,15 +119,14 @@ const base = import.meta.env.BASE_URL;
             Archive
           </h3>
 
-          {/* Horizontal scrollable archive on mobile, vertical on desktop */}
           <div
-            class="hide-scrollbar justi flex justify-center overflow-x-auto pb-4 md:flex-col md:overflow-visible md:pb-0"
+            class="hide-scrollbar flex justify-center overflow-x-auto pb-4 md:flex-col md:overflow-visible md:pb-0"
           >
             {
-              years.map((year, index) => (
+              years.map((year) => (
                 <a
                   href={`#year-${year}`}
-                  class={`mr-3 flex items-center rounded-full px-4 py-2 whitespace-nowrap transition-colors md:mr-0 md:w-full md:rounded-none md:px-0 md:py-3 md:whitespace-normal dark:border-zinc-800`}
+                  class="mr-3 flex items-center rounded-full px-4 py-2 whitespace-nowrap transition-colors md:mr-0 md:w-full md:rounded-none md:px-0 md:py-3 md:whitespace-normal dark:border-zinc-800"
                 >
                   <span class="text-base font-medium text-zinc-900 md:text-lg dark:text-zinc-100">
                     {year}
@@ -154,7 +141,7 @@ const base = import.meta.env.BASE_URL;
         </div>
       </div>
 
-      {/* Improved post grid for mobile */}
+      {/* Post grid by year */}
       <div class="md:col-span-9">
         {
           years.map((year) => (
@@ -188,206 +175,43 @@ const base = import.meta.env.BASE_URL;
 </BaseLayout>
 
 <style>
-  /* Blob animation */
-  .animate-blob {
-    animation: blob-bounce 8s infinite ease;
-  }
-
-  .animation-delay-2000 {
-    animation-delay: 2s;
-  }
-
-  @keyframes blob-bounce {
-    0%,
-    100% {
-      transform: translate(0, 0) scale(1);
-    }
-    25% {
-      transform: translate(5%, 5%) scale(1.05);
-    }
-    50% {
-      transform: translate(0, 10%) scale(1);
-    }
-    75% {
-      transform: translate(-5%, 5%) scale(0.95);
-    }
-  }
-
-  /* Search container hover effect */
-  .search-container:hover .search-pulse {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 0;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
-
-  /* Input focus animation */
-  input:focus + div .search-pulse {
-    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  /* Hide scrollbar but keep functionality */
   .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
-  }
-
-  /* Line clamp for descriptions */
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* Improved touch targets for mobile */
-  @media (max-width: 640px) {
-    a,
-    button {
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-    }
   }
 </style>
 
 <script>
-  // Script không thay đổi - giữ nguyên chức năng
   document.addEventListener("DOMContentLoaded", () => {
     const backToTopButton = document.getElementById("back-to-top");
-
     if (backToTopButton) {
-      // Show button when scrolled down
-      const toggleBackToTopButton = () => {
-        if (window.scrollY > 300) {
-          backToTopButton.classList.remove("opacity-0", "invisible");
-          backToTopButton.classList.add("opacity-100", "visible");
-        } else {
-          backToTopButton.classList.remove("opacity-100", "visible");
-          backToTopButton.classList.add("opacity-0", "invisible");
-        }
+      const toggle = () => {
+        const visible = window.scrollY > 300;
+        backToTopButton.classList.toggle("opacity-0", !visible);
+        backToTopButton.classList.toggle("invisible", !visible);
+        backToTopButton.classList.toggle("opacity-100", visible);
+        backToTopButton.classList.toggle("visible", visible);
       };
-
-      // Scroll to top when clicked
-      backToTopButton.addEventListener("click", () => {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-      });
-
-      // Check scroll position
-      window.addEventListener("scroll", toggleBackToTopButton);
-      toggleBackToTopButton(); // Initial check
+      backToTopButton.addEventListener("click", () =>
+        window.scrollTo({ top: 0, behavior: "smooth" }),
+      );
+      window.addEventListener("scroll", toggle);
+      toggle();
     }
 
-    // Add smooth scrolling to year links
     document.querySelectorAll('a[href^="#year-"]').forEach((anchor) => {
       anchor.addEventListener("click", function (e) {
         e.preventDefault();
-        const targetId = this.getAttribute("href");
+        const targetId = (this as HTMLAnchorElement).getAttribute("href")!;
         const targetElement = document.querySelector(targetId);
-
         if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 100,
-            behavior: "smooth",
-          });
-
-          // Update URL hash without jumping
-          history.pushState(null, null, targetId);
+          window.scrollTo({ top: (targetElement as HTMLElement).offsetTop - 100, behavior: "smooth" });
+          history.pushState(null, "", targetId);
         }
       });
     });
-
-    // Add touch support for hover effects
-    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-
-    if (isTouchDevice) {
-      const articles = document.querySelectorAll("article");
-
-      articles.forEach((article) => {
-        article.addEventListener("touchstart", () => {
-          article.classList.add("is-touched");
-        });
-
-        article.addEventListener("touchend", () => {
-          setTimeout(() => {
-            article.classList.remove("is-touched");
-          }, 300);
-        });
-      });
-    }
   });
-
-  // SPA transition handling
-  function setupSPATransitions() {
-    // Handle all blog post links for SPA transitions
-    document.querySelectorAll('a[href^="/blog/"]').forEach((link) => {
-      // Skip links that are anchor links or already processed
-      if (link.getAttribute("href").includes("#") || link.hasAttribute("data-spa-handled")) {
-        return;
-      }
-
-      // Mark as handled to avoid duplicate listeners
-      link.setAttribute("data-spa-handled", "true");
-
-      link.addEventListener("click", (e) => {
-        // Don't handle if modifier keys are pressed (for opening in new tab, etc.)
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
-          return;
-        }
-
-        e.preventDefault();
-        const targetHref = link.getAttribute("href");
-
-        // Trigger page transition animation
-        const pageTransition = document.getElementById("page-transition");
-        if (pageTransition) {
-          pageTransition.classList.remove("opacity-0");
-          pageTransition.classList.add("opacity-100");
-
-          // Navigate after transition effect
-          setTimeout(() => {
-            window.location.href = targetHref;
-          }, 300);
-        } else {
-          // Fallback if transition element doesn't exist
-          window.location.href = targetHref;
-        }
-      });
-    });
-
-    // Handle year anchor links specially
-    document.querySelectorAll('a[href^="#year-"]').forEach((anchor) => {
-      anchor.setAttribute("data-spa-internal", "true");
-    });
-  }
-
-  // Initialize on first load
-  document.addEventListener("DOMContentLoaded", setupSPATransitions);
-
-  // Re-initialize when content changes via Astro's view transitions
-  document.addEventListener("astro:page-load", setupSPATransitions);
-
-  // For compatibility with custom transition system
-  document.addEventListener("page-transition-complete", setupSPATransitions);
 </script>

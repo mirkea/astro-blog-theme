@@ -337,6 +337,16 @@ button {
     box-shadow 0.2s ease;
 }
 
+/* Hide scrollbar but keep scroll functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Smooth page transitions */
 .page-transition {
   transition:

@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from "astro:transitions";
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
 import Background from "../components/Background.astro";
@@ -6,7 +7,6 @@ import "../styles/global.css";
 import "./styles/logo-anim.css";
 import "./styles/transitions.css";
 import "./styles/markdown.css";
-import logoStrokeRaw from "../../public/logo-stroke.svg?raw";
 
 export interface Props {
   title: string;
@@ -28,6 +28,7 @@ const { title, description = "A minimalist personal blog" } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <title>{title}</title>
+
     <!-- Apply theme synchronously to avoid flash of wrong theme -->
     <script is:inline>
       (function () {
@@ -42,6 +43,7 @@ const { title, description = "A minimalist personal blog" } = Astro.props;
         }
       })();
     </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -52,19 +54,12 @@ const { title, description = "A minimalist personal blog" } = Astro.props;
       defer
       src="https://cloud.umami.is/script.js"
       data-website-id="67c800ae-6f9e-4a16-b173-5f79d2d97ee5"></script>
+
+    <ViewTransitions />
   </head>
   <body
     class="flex min-h-screen flex-col bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
   >
-    <!-- Page transition overlay - for smooth transitions between pages -->
-    <div
-      id="page-transition"
-      class="pointer-events-none fixed inset-0 z-40 flex items-center justify-center bg-white opacity-0 transition-opacity duration-300 dark:bg-zinc-900"
-    >
-      <Fragment set:html={logoStrokeRaw} />
-    </div>
-
-    <!-- Background component with dot pattern and ambient glow -->
     <Background />
 
     <div class="mx-auto w-full max-w-3xl flex-grow px-4 sm:px-6">
@@ -76,297 +71,7 @@ const { title, description = "A minimalist personal blog" } = Astro.props;
     <Footer />
 
     <script>
-      // Enhanced SPA transition system with history API
-      document.addEventListener("DOMContentLoaded", () => {
-        const pageTransition = document.getElementById("page-transition");
-        const mainContent = document.querySelector("main");
-
-        // Function to load content via fetch
-        async function loadContent(url) {
-          try {
-            // Show transition overlay
-            if (pageTransition) {
-              // Restart logo draw animation
-              pageTransition.querySelectorAll("[data-animate]").forEach((el) => {
-                (el as HTMLElement).style.animation = "none";
-                el.getBoundingClientRect(); // force reflow
-                (el as HTMLElement).style.animation = "";
-              });
-              pageTransition.classList.remove("opacity-0", "pointer-events-none");
-              pageTransition.classList.add("opacity-100");
-            }
-
-            // Fade out current content
-            if (mainContent) {
-              mainContent.style.opacity = "0";
-              mainContent.style.transform = "translateY(10px)";
-            }
-
-            // Fetch the new page content
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Failed to fetch ${url}`);
-            const html = await response.text();
-
-            // Create a temporary element to parse the HTML
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, "text/html");
-
-            // Extract the main content
-            const newContent = doc.querySelector("main");
-            if (!newContent) throw new Error("Could not find main content in the fetched page");
-
-            // Extract the title
-            const newTitle = doc.querySelector("title");
-            if (newTitle) {
-              document.title = newTitle.textContent;
-            }
-
-            // Extract meta description
-            const newDescription = doc.querySelector('meta[name="description"]');
-            if (newDescription) {
-              const currentDescription = document.querySelector('meta[name="description"]');
-              if (currentDescription) {
-                currentDescription.setAttribute(
-                  "content",
-                  newDescription.getAttribute("content") || "",
-                );
-              }
-            }
-
-            // Wait a bit for transition effect
-            await new Promise((resolve) => setTimeout(resolve, 300));
-
-            // Replace the content
-            if (mainContent && newContent) {
-              mainContent.innerHTML = newContent.innerHTML;
-
-              // Scripts injected via innerHTML are parsed as DOM nodes but never executed.
-              // Remove them so the querySelector check below only matches truly-executed scripts.
-              Array.from(mainContent.querySelectorAll("script")).forEach((s) => s.remove());
-
-              // Run scripts in the new content
-              Array.from(newContent.querySelectorAll("script")).forEach((oldScript) => {
-                const src = oldScript.getAttribute("src");
-                // Skip external scripts already present in the document to avoid re-declaring
-                // top-level const/let identifiers (e.g. cusdis.es.js's makeIframeContent)
-                if (src && document.querySelector(`script[src="${src}"]`)) {
-                  return;
-                }
-                const newScript = document.createElement("script");
-                Array.from(oldScript.attributes).forEach((attr) => {
-                  newScript.setAttribute(attr.name, attr.value);
-                });
-                newScript.textContent = oldScript.textContent;
-                mainContent.appendChild(newScript);
-              });
-            }
-
-            // Fade in new content with animation
-            if (mainContent) {
-              mainContent.style.opacity = "0";
-              mainContent.style.transform = "translateY(10px)";
-
-              setTimeout(() => {
-                mainContent.style.transition = "opacity 0.5s ease, transform 0.5s ease";
-                mainContent.style.opacity = "1";
-                mainContent.style.transform = "translateY(0)";
-
-                // Add entrance animation class
-                mainContent.classList.add("content-entering");
-                setTimeout(() => {
-                  mainContent.classList.remove("content-entering");
-                }, 800);
-              }, 50);
-            }
-
-            // Hide transition overlay
-            if (pageTransition) {
-              setTimeout(() => {
-                pageTransition.classList.add("opacity-0", "pointer-events-none");
-                pageTransition.classList.remove("opacity-100");
-              }, 200);
-            }
-
-            // Re-initialize Cusdis if the new page has a comment thread.
-            // This must run synchronously here rather than relying on BlogPost's module
-            // script, because dynamically-injected module scripts execute asynchronously
-            // (after the current task), so any event dispatched here would fire before
-            // the listener is ever registered.
-            const cusdisThread = document.getElementById("cusdis_thread");
-            if (cusdisThread) {
-              const injectCusdisStyles = (doc: Document) => {
-                if (doc.getElementById("cusdis-custom-styles")) return;
-                const style = doc.createElement("style");
-                style.id = "cusdis-custom-styles";
-                style.textContent = `
-                  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-                  html { color-scheme: light !important; font-family: "Inter", ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 1.5; }
-                  html, body { background: transparent !important; margin: 0; padding: 0; }
-                  * { box-sizing: border-box; font-family: inherit; }
-                  label { font-size: 0.875rem; font-weight: 500; color: #3f3f46; display: block; margin-bottom: 0.375rem; }
-                  .dark label { color: #a1a1aa; }
-                  input, textarea { width: 100%; border-radius: 0.375rem; border: 1px solid #e4e4e7; padding: 0.5rem 0.75rem; font-size: 0.875rem; background: #fff; color: #18181b; outline: none; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
-                  input:focus, textarea:focus { border-color: #a1a1aa; box-shadow: 0 0 0 3px rgba(161,161,170,0.2); }
-                  .dark input, .dark textarea { background: #27272a; color: #f4f4f5; border-color: #3f3f46; }
-                  .dark input:focus, .dark textarea:focus { border-color: #71717a; box-shadow: 0 0 0 3px rgba(113,113,122,0.2); }
-                  button { display: inline-flex; align-items: center; justify-content: center; border-radius: 0.5rem; border: none; padding: 0.5rem 1.25rem; font-size: 0.875rem; font-weight: 500; height: auto !important; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; background: #18181b !important; color: #f4f4f5 !important; }
-                  button:hover { background: #3f3f46 !important; }
-                  .dark button { background: #f4f4f5 !important; color: #18181b !important; }
-                  .dark button:hover { background: #d4d4d8 !important; }
-                  .comment-header strong, [class*="username"], [class*="author"] { font-weight: 600; font-size: 0.875rem; color: #18181b; }
-                  .dark [class*="username"], .dark [class*="author"] { color: #f4f4f5; }
-                  [class*="date"], [class*="time"], time { font-size: 0.75rem; color: #71717a; }
-                  p { font-size: 0.875rem; color: #3f3f46; line-height: 1.6; margin: 0.25rem 0; }
-                  .dark p { color: #a1a1aa; }
-                  a { color: #71717a; font-size: 0.75rem; text-decoration: none; }
-                  a:hover { color: #3f3f46; }
-                  .dark a { color: #71717a; }
-                  .dark a:hover { color: #a1a1aa; }
-                `;
-                doc.head.appendChild(style);
-              };
-
-              const attachCusdisIframe = (iframe: HTMLIFrameElement) => {
-                iframe.setAttribute("allowtransparency", "true");
-                iframe.style.background = "transparent";
-                const tryObserve = () => {
-                  try {
-                    const body = (iframe.contentDocument as Document)?.body;
-                    if (!body) {
-                      setTimeout(tryObserve, 100);
-                      return;
-                    }
-                    injectCusdisStyles(iframe.contentDocument as Document);
-                    new ResizeObserver(() => {
-                      const h = (iframe.contentDocument as Document).body.scrollHeight;
-                      if (h > 0) iframe.style.height = h + "px";
-                    }).observe(body);
-                  } catch {
-                    setTimeout(tryObserve, 200);
-                  }
-                };
-                iframe.addEventListener("load", tryObserve);
-                tryObserve();
-              };
-
-              const waitForIframe = () => {
-                const existing = cusdisThread.querySelector("iframe") as HTMLIFrameElement | null;
-                if (existing) {
-                  attachCusdisIframe(existing);
-                  return;
-                }
-                const mo = new MutationObserver((mutations) => {
-                  for (const m of mutations) {
-                    for (const node of m.addedNodes) {
-                      if ((node as Element).tagName === "IFRAME") {
-                        attachCusdisIframe(node as HTMLIFrameElement);
-                        mo.disconnect();
-                        return;
-                      }
-                    }
-                  }
-                });
-                mo.observe(cusdisThread, { childList: true });
-              };
-
-              waitForIframe();
-
-              if ((window as any).CUSDIS) {
-                (window as any).CUSDIS.renderTo(cusdisThread);
-              } else {
-                const cusdisScript = mainContent?.querySelector(
-                  'script[src*="cusdis.es.js"]',
-                ) as HTMLScriptElement | null;
-                if (cusdisScript) {
-                  cusdisScript.addEventListener(
-                    "load",
-                    () => {
-                      (window as any).CUSDIS?.renderTo(cusdisThread);
-                    },
-                    { once: true },
-                  );
-                }
-              }
-            }
-
-            // Dispatch custom event for content loaded
-            document.dispatchEvent(
-              new CustomEvent("spa-content-loaded", {
-                detail: { url },
-              }),
-            );
-
-            // Scroll to top or to saved position
-            window.scrollTo(0, 0);
-
-            // Re-attach event listeners to new content
-            attachLinkListeners();
-          } catch (error) {
-            console.error("Error loading content:", error);
-
-            // Fallback to traditional navigation on error
-            window.location.href = url;
-          }
-        }
-
-        // Function to attach event listeners to all links
-        function attachLinkListeners() {
-          document.querySelectorAll("a").forEach((link) => {
-            // Skip links that are already handled, anchor links, external links, or have special attributes
-            if (
-              link.hasAttribute("data-spa-handled") ||
-              !link.href.startsWith(window.location.origin) ||
-              link.href.includes("#") ||
-              link.hasAttribute("target") ||
-              link.hasAttribute("download") ||
-              link.getAttribute("rel") === "external" ||
-              link.getAttribute("rel") === "nofollow"
-            ) {
-              return;
-            }
-
-            // Mark as handled to avoid duplicate listeners
-            link.setAttribute("data-spa-handled", "true");
-
-            link.addEventListener("click", (e) => {
-              // Don't handle if modifier keys are pressed (for opening in new tab, etc.)
-              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
-                return;
-              }
-
-              e.preventDefault();
-              const targetHref = link.href;
-
-              // Don't transition if clicking the current page
-              if (targetHref === window.location.href) {
-                return;
-              }
-
-              // Update browser history
-              window.history.pushState({ path: targetHref }, "", targetHref);
-
-              // Load the new content
-              loadContent(targetHref);
-            });
-          });
-        }
-
-        // Initial attachment of link listeners
-        attachLinkListeners();
-
-        // Handle browser back/forward navigation
-        window.addEventListener("popstate", (e) => {
-          if (e.state && e.state.path) {
-            loadContent(e.state.path);
-          } else {
-            loadContent(window.location.href);
-          }
-        });
-      });
-
-      // Theme handling with transition effects
-      function setupThemeHandling() {
-        // Apply theme from localStorage or system preference
+      function setupTheme() {
         const theme = localStorage.getItem("theme");
         if (
           theme === "dark" ||
@@ -377,20 +82,13 @@ const { title, description = "A minimalist personal blog" } = Astro.props;
           document.documentElement.classList.remove("dark");
         }
 
-        // Listen for theme changes
         document.addEventListener("themeChanged", () => {
-          // Add transition class to body
           document.body.classList.add("theme-transitioning");
-
-          // Remove class after transition completes
-          setTimeout(() => {
-            document.body.classList.remove("theme-transitioning");
-          }, 500);
+          setTimeout(() => document.body.classList.remove("theme-transitioning"), 500);
         });
       }
 
-      // Initialize theme handling
-      document.addEventListener("DOMContentLoaded", setupThemeHandling);
+      document.addEventListener("astro:page-load", setupTheme);
     </script>
   </body>
 </html>

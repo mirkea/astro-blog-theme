@@ -1,32 +1,20 @@
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
-import react from "@astrojs/react";
+import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 
-// Determine site URL based on environment
 const getSiteURL = () => {
-	// For GitHub Pages deployment
-	if (process.env.GITHUB_PAGES_SITE) {
-		return process.env.GITHUB_PAGES_SITE;
-	}
-	// For Vercel production deployment
-	if (process.env.VERCEL_URL) {
-		return `https://${process.env.VERCEL_URL}`;
-	}
-	// For Vercel preview deployment
-	if (process.env.VERCEL_BRANCH_URL) {
-		return `https://${process.env.VERCEL_BRANCH_URL}`;
-	}
-	// For local development
-	return "http://localhost:4321";
+  if (process.env.GITHUB_PAGES_SITE) return process.env.GITHUB_PAGES_SITE;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  if (process.env.VERCEL_BRANCH_URL) return `https://${process.env.VERCEL_BRANCH_URL}`;
+  return "http://localhost:4321";
 };
 
-// https://astro.build/config
 export default defineConfig({
-	site: getSiteURL(),
-	base: "/",
-	integrations: [react(), sitemap()],
-	vite: {
-		plugins: [tailwindcss()],
-	},
+  site: getSiteURL(),
+  base: "/",
+  integrations: [mdx(), sitemap()],
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });

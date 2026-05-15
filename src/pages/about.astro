@@ -1,62 +1,44 @@
 ---
 export const prerender = true;
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { Search, Code2, ListChecks, Users, PenTool, FileCode, Braces, Atom, Bot } from "lucide-react";
+import Button from "../components/Button.astro";
 
 const skills = [
-  {
-    name: "Product Discovery",
-    level: 95,
-    icon: Search,
-  },
-  {
-    name: "Rapid Prototyping",
-    level: 95,
-    icon: Code2,
-  },
-  {
-    name: "Production Management",
-    level: 95,
-    icon: ListChecks,
-  },
-  {
-    name: "Stakeholder Alignment",
-    level: 90,
-    icon: Users,
-  },
-  {
-    name: "UX / Wireframing",
-    level: 90,
-    icon: PenTool,
-  },
-  {
-    name: "HTML / CSS",
-    level: 95,
-    icon: FileCode,
-  },
-  {
-    name: "JavaScript",
-    level: 75,
-    icon: Braces,
-  },
-  {
-    name: "React",
-    level: 80,
-    icon: Atom,
-  },
-  {
-    name: "AI Workflows",
-    level: 80,
-    icon: Bot,
-  },
-];
+  { name: "Product Discovery", level: 95, icon: "search" },
+  { name: "Rapid Prototyping", level: 95, icon: "code" },
+  { name: "Production Management", level: 95, icon: "list" },
+  { name: "Stakeholder Alignment", level: 90, icon: "users" },
+  { name: "UX / Wireframing", level: 90, icon: "pen" },
+  { name: "HTML / CSS", level: 95, icon: "file-code" },
+  { name: "JavaScript", level: 75, icon: "braces" },
+  { name: "React", level: 80, icon: "atom" },
+  { name: "AI Workflows", level: 80, icon: "bot" },
+] as const;
+
+type SkillIcon = (typeof skills)[number]["icon"];
+
+const iconPaths: Record<SkillIcon, string> = {
+  search:
+    "M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z",
+  code: "M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5",
+  list: "M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z",
+  users:
+    "M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z",
+  pen: "M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125",
+  "file-code":
+    "M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z",
+  braces:
+    "M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z",
+  atom: "M12 12.75c1.148 0 2.278.08 3.383.237 1.037.146 1.866.966 1.866 2.013 0 3.728-2.35 6.75-5.25 6.75S6.75 18.728 6.75 15c0-1.046.83-1.867 1.866-2.013A24.204 24.204 0 0112 12.75zm0 0c2.883 0 5.647.508 8.207 1.44a23.91 23.91 0 01-1.152 6.06M12 12.75c-2.883 0-5.647.508-8.208 1.44a23.91 23.91 0 001.153 6.06M12 12.75a2.25 2.25 0 002.248-2.354M12 12.75a2.25 2.25 0 01-2.248-2.354M12 8.25c.995 0 1.971-.08 2.922-.236.403-.066.74-.358.795-.762a3.778 3.778 0 00-.399-2.25M12 8.25c-.995 0-1.97-.08-2.922-.236-.402-.066-.74-.358-.795-.762a3.734 3.734 0 01.4-2.253M12 8.25a2.25 2.25 0 00-2.248 2.146M12 8.25a2.25 2.25 0 012.248 2.146M8.683 5a6.032 6.032 0 01-1.155-1.002c.07-.63.27-1.222.574-1.747m.581 2.749A3.75 3.75 0 0115.318 5m0 0c.427-.283.815-.62 1.155-.999a4.471 4.471 0 00-.575-1.752M4.921 6a24.048 24.048 0 00-.392 3.314c1.668.546 3.476.914 5.33 1.09M15.08 6a24.048 24.048 0 01.392 3.314c-1.668.546-3.476.914-5.33 1.09",
+  bot: "M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5",
+};
 ---
 
 <BaseLayout title="About Me" description="Learn more about my background, skills, and experience">
   <div
     class="theme-transition-element mx-auto max-w-6xl overflow-hidden px-4 py-8 sm:px-6 sm:py-12 md:py-16"
   >
-    <!-- Hero Section - Improved mobile layout -->
+    <!-- Hero Section -->
     <div class="relative mb-12 sm:mb-16 md:mb-20">
       <div class="relative grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
         <div class="order-2 text-center md:order-1 md:text-left">
@@ -74,12 +56,6 @@ const skills = [
             A product manager with 10 years of PM experience and 20 years of technical depth -
             bridging discovery, design, and engineering.
           </p>
-
-          <div
-            class="social-links-container theme-transition-children flex flex-wrap justify-center gap-4 md:justify-start"
-          >
-            <!-- Social links remain the same -->
-          </div>
         </div>
 
         <div class="relative order-1 md:order-2">
@@ -91,13 +67,15 @@ const skills = [
               alt="Profile photo"
               class="h-full w-full object-cover"
               loading="eager"
+              width="480"
+              height="480"
             />
           </div>
         </div>
       </div>
     </div>
 
-    <!-- About Section - Improved spacing for mobile -->
+    <!-- About Section -->
     <div class="theme-transition-element mb-16 sm:mb-20 md:mb-24">
       <div class="mx-auto max-w-3xl">
         <h2
@@ -134,7 +112,7 @@ const skills = [
       </div>
     </div>
 
-    <!-- Skills Section - Improved for mobile -->
+    <!-- Skills Section -->
     <div class="theme-transition-element mb-16 sm:mb-20 md:mb-24">
       <h2
         class="theme-transition-color mb-8 text-center text-2xl font-bold text-zinc-900 sm:mb-12 sm:text-3xl dark:text-zinc-100"
@@ -148,7 +126,21 @@ const skills = [
             <div class="skill-card theme-transition-element transform rounded-md border border-zinc-200 bg-white transition-all duration-300 hover:shadow-md dark:border-zinc-700 dark:bg-zinc-800/50 dark:hover:border-zinc-600">
               <div class="flex items-center gap-4 p-5">
                 <div class="theme-transition-bg theme-transition-color flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
-                  <skill.icon size={18} />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="h-[18px] w-[18px]"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d={iconPaths[skill.icon]}
+                    />
+                  </svg>
                 </div>
                 <div class="min-w-0 flex-1">
                   <div class="mb-2 flex items-center justify-between gap-2">
@@ -173,7 +165,7 @@ const skills = [
       </div>
     </div>
 
-    <!-- Contact Section - Improved for mobile -->
+    <!-- Contact Section -->
     <div class="theme-transition-element mx-auto max-w-3xl text-center">
       <h2
         class="theme-transition-color mb-4 text-2xl font-bold text-zinc-900 sm:mb-6 sm:text-3xl dark:text-zinc-100"
@@ -187,26 +179,24 @@ const skills = [
         just say hello, feel free to reach out.
       </p>
 
-      <a
-        href="mailto:mtz@outlook.com"
-        class="theme-transition-element inline-flex items-center justify-center rounded-lg bg-zinc-900 px-6 py-3 text-base font-medium text-zinc-100 transition-colors hover:bg-zinc-700 sm:px-8 sm:py-4 sm:text-lg dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
-      >
+      <Button href="mailto:mtz@outlook.com" variant="primary" class="sm:px-8 sm:py-4 sm:text-base">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="mr-2 h-4 w-4 sm:h-5 sm:w-5"
+          class="mr-1 h-4 w-4 sm:h-5 sm:w-5"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
         >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
             d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
           ></path>
         </svg>
         Say Hello
-      </a>
+      </Button>
     </div>
   </div>
 </BaseLayout>
@@ -222,7 +212,6 @@ const skills = [
     z-index: 10;
   }
 
-  /* Reduce animation complexity on mobile for better performance */
   @media (max-width: 640px) {
     .skill-card {
       transition:
@@ -236,27 +225,6 @@ const skills = [
     }
   }
 
-  /* Improved touch targets for mobile */
-  @media (max-width: 640px) {
-    a,
-    button {
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-    }
-
-    .social-link {
-      min-width: 44px;
-      min-height: 44px;
-    }
-  }
-
-  /* Theme transition effect */
-  :global(.theme-switching) .theme-transition-element {
-    animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  /* Smooth card transition during theme switch */
   .skill-card.theme-transition-element {
     transition:
       background-color var(--theme-transition),
@@ -266,104 +234,3 @@ const skills = [
       transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 </style>
-
-<script>
-  // Handle SPA transitions for about page
-  function setupSPATransitions() {
-    // Handle all internal links for SPA transitions
-    document.querySelectorAll('a[href^="/"]').forEach((link) => {
-      // Skip links that are anchor links, external links, or already processed
-      if (
-        link.getAttribute("href").includes("#") ||
-        link.getAttribute("target") === "_blank" ||
-        link.hasAttribute("data-spa-handled")
-      ) {
-        return;
-      }
-
-      // Mark as handled to avoid duplicate listeners
-      link.setAttribute("data-spa-handled", "true");
-
-      link.addEventListener("click", (e) => {
-        // Don't handle if modifier keys are pressed (for opening in new tab, etc.)
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
-          return;
-        }
-
-        e.preventDefault();
-        const targetHref = link.getAttribute("href");
-
-        // Trigger page transition animation
-        const pageTransition = document.getElementById("page-transition");
-        if (pageTransition) {
-          pageTransition.classList.remove("opacity-0");
-          pageTransition.classList.add("opacity-100");
-
-          // Navigate after transition effect
-          setTimeout(() => {
-            window.location.href = targetHref;
-          }, 300);
-        } else {
-          // Fallback if transition element doesn't exist
-          window.location.href = targetHref;
-        }
-      });
-    });
-
-    // Initialize animations for about page
-    function animateAboutContent() {
-      // Animate hero section elements
-      const heroElements = document.querySelectorAll("h1, .order-2 p, .social-links-container");
-      heroElements.forEach((el, index) => {
-        setTimeout(
-          () => {
-            el.classList.add("animate-reveal");
-          },
-          100 + index * 150,
-        );
-      });
-
-      // Animate profile image
-      const profileImage = document.querySelector(".aspect-square");
-      if (profileImage) {
-        setTimeout(() => {
-          profileImage.classList.add("animate-reveal");
-        }, 200);
-      }
-
-      // Animate skill bars with staggered delay
-      const skillBars = document.querySelectorAll(".skill-bar");
-      skillBars.forEach((bar, index) => {
-        setTimeout(
-          () => {
-            bar.classList.add("animate-skill");
-          },
-          500 + index * 100,
-        );
-      });
-
-      // Animate sections with staggered delay
-      const sections = document.querySelectorAll("section");
-      sections.forEach((section, index) => {
-        setTimeout(
-          () => {
-            section.classList.add("animate-reveal");
-          },
-          300 + index * 200,
-        );
-      });
-    }
-
-    // Run animations
-    animateAboutContent();
-  }
-
-  // Initialize on first load
-  document.addEventListener("DOMContentLoaded", setupSPATransitions);
-
-  // Re-initialize when content changes via Astro's view transitions
-  document.addEventListener("astro:page-load", setupSPATransitions);
-
-  // For compatibility with custom transition system
-  document.addEventListener("page-transition-complete", setupSPATransitions);
-</script>

@@ -1,0 +1,28 @@
+---
+export interface Props {
+  tag: string;
+  size?: "sm" | "md";
+  active?: boolean;
+  class?: string;
+}
+
+const { tag, size = "md", active = false, class: className = "" } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const sizeClasses = size === "sm" ? "px-2.5 py-0.5 text-xs" : "px-3 py-1 text-xs";
+const stateClasses = active
+  ? "bg-zinc-900/10 text-zinc-900 dark:bg-zinc-100/20 dark:text-zinc-100"
+  : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700";
+---
+
+<a
+  href={`${base}tags/${tag}`}
+  class:list={[
+    "theme-transition-all inline-flex items-center rounded-full font-medium no-underline transition-colors",
+    sizeClasses,
+    stateClasses,
+    className,
+  ]}
+>
+  #{tag}
+</a>
