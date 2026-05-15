@@ -1,6 +1,7 @@
 ---
 import logoRaw from "../../public/logo.svg?raw";
 import { SOCIAL_LINKS } from "../consts";
+import { SOCIAL_ICONS } from "./socialIcons";
 
 const currentYear = new Date().getFullYear();
 const base = import.meta.env.BASE_URL;
@@ -13,7 +14,11 @@ const navLinks = [
   { text: "RSS", href: `${base}rss.xml` },
 ];
 
-const socialLinks = SOCIAL_LINKS.filter((s) => s.name !== "Facebook");
+const socialLinks = SOCIAL_LINKS.map((s) => ({
+  ...s,
+  fillIcon: SOCIAL_ICONS[s.name]?.fillIcon ?? "",
+  strokeIcon: SOCIAL_ICONS[s.name]?.strokeIcon ?? "",
+}));
 ---
 
 <footer

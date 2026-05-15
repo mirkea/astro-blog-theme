@@ -1,5 +1,6 @@
 ---
 import { SOCIAL_LINKS } from "../consts";
+import { SOCIAL_ICONS } from "./socialIcons";
 
 export interface Props {
   title: string;
@@ -16,7 +17,7 @@ const shareLinks = SOCIAL_LINKS.filter((s) => s.shareUrlTemplate).map((s) => ({
   href: s.shareUrlTemplate!
     .replace("{title}", encodedTitle)
     .replace("{url}", encodedUrl),
-  strokeIcon: s.strokeIcon,
+  strokeIcon: SOCIAL_ICONS[s.name]?.strokeIcon ?? "",
 }));
 ---
 
