@@ -1,0 +1,33 @@
+---
+import Base from "../../layouts/Base.astro";
+import Section from "../../components/ui/Section.astro";
+import SectionHeading from "../../components/ui/SectionHeading.astro";
+import { getPosts, getTags } from "../../lib/posts";
+
+const tags = getTags(await getPosts());
+---
+
+<Base title="Topics" description="Every topic on the blog.">
+  <Section tight>
+    <SectionHeading title="Topics." lead="Every tag on the blog, most used first." size="display" as="h1" />
+  </Section>
+  <Section tone="surface">
+    {
+      tags.length === 0 ? (
+        <div class="card card-white mx-auto max-w-lg text-center">
+          <p class="heading">No topics yet.</p>
+          <p class="body mt-2">Add tags to a post's frontmatter and they show up here.</p>
+        </div>
+      ) : (
+        <div class="rise grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {tags.map((tag) => (
+            <a href={`/tags/${tag.name}`} class="card card-white card-link flex items-center justify-between gap-4 !py-6">
+              <p class="heading min-w-0 truncate !text-xl">#{tag.name}</p>
+              <span class="pill shrink-0">{tag.count} {tag.count === 1 ? "post" : "posts"}</span>
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </Section>
+</Base>

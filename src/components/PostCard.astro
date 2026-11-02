@@ -1,0 +1,40 @@
+---
+import FormattedDate from "./FormattedDate.astro";
+import Icon from "./ui/Icon.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  pubDate: Date;
+  href: string;
+  readingTime?: string;
+  tags?: string[];
+  image?: string;
+  tone?: "surface" | "white";
+}
+const { title, description, pubDate, href, readingTime, tags = [], image, tone = "surface" } = Astro.props;
+---
+
+<article class:list={["card card-link group flex h-full flex-col", tone === "white" && "card-white"]}>
+  {
+    image && (
+      <div class="-mx-2 -mt-2 mb-6 aspect-video overflow-hidden rounded-tile bg-surface">
+        <img src={image} alt="" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+      </div>
+    )
+  }
+  <p class="caption">
+    <FormattedDate date={pubDate} />
+    {readingTime && <> · {readingTime}</>}
+  </p>
+  <h3 class="heading mt-3 !text-[1.35rem]">
+    <a href={href} class="after:absolute after:inset-0 after:rounded-card">{title}</a>
+  </h3>
+  {description && <p class="mt-3 line-clamp-3 text-ink-2">{description}</p>}
+  <div class="mt-auto flex items-center justify-between gap-4 pt-6">
+    <div class="relative z-10 flex flex-1 flex-wrap gap-x-3 gap-y-1">
+      {tags.slice(0, 3).map((tag) => <a href={`/tags/${tag}`} class="tag">#{tag}</a>)}
+    </div>
+    <Icon name="arrow-right" class="size-5 shrink-0 text-ink transition-transform duration-300 group-hover:translate-x-1" />
+  </div>
+</article>

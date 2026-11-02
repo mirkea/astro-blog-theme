@@ -1,0 +1,12 @@
+---
+// The mark: an ink circle with a dot. Replace with your own SVG (keep currentColor).
+interface Props {
+  class?: string;
+}
+const { class: className = "size-7" } = Astro.props;
+---
+
+<svg viewBox="0 0 32 32" class={className} aria-hidden="true">
+  <rect width="32" height="32" rx="9" fill="currentColor"></rect>
+  <circle cx="16" cy="16" r="4.5" fill="var(--canvas)"></circle>
+</svg>

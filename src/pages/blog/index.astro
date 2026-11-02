@@ -1,0 +1,72 @@
+---
+import Base from "../../layouts/Base.astro";
+import PostCard from "../../components/PostCard.astro";
+import FormattedDate from "../../components/FormattedDate.astro";
+import Section from "../../components/ui/Section.astro";
+import SectionHeading from "../../components/ui/SectionHeading.astro";
+import Icon from "../../components/ui/Icon.astro";
+import { getPosts, minutesToRead, postHref } from "../../lib/posts";
+
+const posts = await getPosts();
+const [featured, ...rest] = posts;
+const byYear = new Map<number, typeof posts>();
+for (const post of rest) {
+  const year = post.data.pubDate.getFullYear();
+  byYear.set(year, [...(byYear.get(year) ?? []), post]);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+---
+
+<Base title="Blog" description="All posts, newest first.">
+  <Section tight>
+    <SectionHeading title="Blog." lead="Notes, essays and build logs. Newest first." size="display" as="h1" />
+    {
+      featured && (
+        <article class="card card-link group rise mt-14 grid gap-8 md:grid-cols-2 md:items-center">
+          {featured.data.image && (
+            <div class="aspect-video overflow-hidden rounded-tile">
+              <img src={featured.data.image} alt="" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
+            </div>
+          )}
+          <div class:list={[!featured.data.image && "md:col-span-2 md:max-w-3xl"]}>
+            <p class="caption">Latest · <FormattedDate date={featured.data.pubDate} /> · {minutesToRead(featured)}</p>
+            <h2 class="title-sm mt-3">
+              <a href={postHref(featured)} class="after:absolute after:inset-0 after:rounded-card">{featured.data.title}</a>
+            </h2>
+            <p class="lead mt-4 line-clamp-3">{featured.data.description}</p>
+            <div class="relative z-10 mt-6 flex flex-wrap items-center gap-2">
+              {featured.data.tags.slice(0, 3).map((tag) => <a href={`/tags/${tag}`} class="pill pill-quiet">#{tag}</a>)}
+              <span class="link-more ml-auto">Read <Icon name="arrow-right" /></span>
+            </div>
+          </div>
+        </article>
+      )
+    }
+  </Section>
+
+  {
+    years.length > 0 && (
+      <Section tone="surface">
+        {years.map((year) => (
+          <div id={`year-${year}`} class="rise mb-16 scroll-mt-24 last:mb-0">
+            <h2 class="title-sm mb-6">{year}</h2>
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {byYear.get(year)!.map((post) => (
+                <PostCard
+                  title={post.data.title}
+                  description={post.data.description}
+                  pubDate={post.data.pubDate}
+                  href={postHref(post)}
+                  readingTime={minutesToRead(post)}
+                  tags={post.data.tags}
+                  image={post.data.image}
+                  tone="white"
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </Section>
+    )
+  }
+</Base>

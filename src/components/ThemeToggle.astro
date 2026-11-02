@@ -1,0 +1,25 @@
+---
+import Icon from "./ui/Icon.astro";
+// Light / dark switch. The choice is kept in localStorage; the first visit follows the OS.
+---
+
+<button
+  type="button"
+  data-theme-toggle
+  class="grid size-10 place-items-center rounded-full text-ink transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+  aria-label="Toggle dark mode"
+>
+  <Icon name="sun" class="size-5 dark:hidden" />
+  <Icon name="moon" class="hidden size-5 dark:block" />
+</button>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const dark = document.documentElement.classList.toggle("dark");
+      try {
+        localStorage.setItem("theme", dark ? "dark" : "light");
+      } catch {}
+    });
+  });
+</script>

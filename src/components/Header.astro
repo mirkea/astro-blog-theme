@@ -1,0 +1,80 @@
+---
+import Icon from "./ui/Icon.astro";
+import { NAV, HEADER_CTA, SITE } from "../config";
+import ThemeToggle from "./ThemeToggle.astro";
+import Logo from "./Logo.astro";
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
+---
+
+<header class="fixed inset-x-0 top-0 z-40 border-b border-line bg-canvas/85 backdrop-blur-xl">
+  <div class="wrap flex h-16 items-center justify-between gap-6">
+    <a href="/" class="flex items-center gap-2.5 text-ink" aria-label={`${SITE.name} home`}>
+      <Logo />
+      <span class="font-display text-lg font-bold tracking-tight">{SITE.name}</span>
+    </a>
+
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Main">
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? "page" : undefined}
+            class:list={[
+              "rounded-full px-4 py-2 text-[0.95rem] transition-colors",
+              isActive(item.href) ? "bg-surface text-ink" : "text-ink-2 hover:text-ink",
+            ]}
+          >
+            {item.text}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <ThemeToggle />
+      {HEADER_CTA && <a href={HEADER_CTA.href} class="btn btn-primary btn-sm hidden sm:inline-flex">{HEADER_CTA.text}</a>}
+      <button type="button" class="grid size-10 place-items-center rounded-full text-ink hover:bg-surface md:hidden" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu" data-menu-open>
+        <Icon name="menu" class="size-6" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<div id="mobile-menu" class="fixed inset-0 z-50 hidden flex-col bg-canvas md:hidden" data-menu>
+  <div class="wrap flex h-16 items-center justify-between border-b border-line">
+    <a href="/" class="flex items-center gap-2.5 text-ink"><Logo /><span class="font-display text-lg font-bold">{SITE.name}</span></a>
+    <button type="button" class="grid size-10 place-items-center rounded-full text-ink hover:bg-surface" aria-label="Close menu" data-menu-close>
+      <Icon name="x" class="size-6" />
+    </button>
+  </div>
+  <nav class="wrap flex flex-1 flex-col justify-center gap-2" aria-label="Mobile">
+    {
+      NAV.map((item) => (
+        <a href={item.href} class:list={["font-display text-4xl font-bold tracking-tight", isActive(item.href) ? "text-ink" : "text-ink-2"]}>
+          {item.text}
+        </a>
+      ))
+    }
+    {HEADER_CTA && <a href={HEADER_CTA.href} class="btn btn-primary btn-lg mt-8 self-start">{HEADER_CTA.text}</a>}
+  </nav>
+</div>
+
+<div class="h-16" aria-hidden="true"></div>
+
+<script>
+  const menu = document.querySelector<HTMLElement>("[data-menu]");
+  const openButton = document.querySelector<HTMLButtonElement>("[data-menu-open]");
+  const setOpen = (open: boolean) => {
+    if (!menu) return;
+    menu.classList.toggle("hidden", !open);
+    menu.classList.toggle("flex", open);
+    document.body.style.overflow = open ? "hidden" : "";
+    openButton?.setAttribute("aria-expanded", String(open));
+  };
+  openButton?.addEventListener("click", () => setOpen(true));
+  document.querySelector("[data-menu-close]")?.addEventListener("click", () => setOpen(false));
+  menu?.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+  document.addEventListener("keydown", (e) => e.key === "Escape" && setOpen(false));
+</script>

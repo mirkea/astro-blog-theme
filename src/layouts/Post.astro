@@ -1,0 +1,60 @@
+---
+import Base from "./Base.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import TagList from "../components/TagList.astro";
+import Section from "../components/ui/Section.astro";
+import Icon from "../components/ui/Icon.astro";
+import type { Post as PostEntry } from "../lib/posts";
+import { postHref } from "../lib/posts";
+
+interface Props {
+  post: PostEntry;
+  readingTime: string;
+  prev?: PostEntry;
+  next?: PostEntry;
+}
+const { post, readingTime, prev, next } = Astro.props;
+const { title, description, pubDate, updatedDate, image, tags } = post.data;
+---
+
+<Base title={title} description={description} image={image}>
+  <Section width="narrow" tight>
+    <article>
+      <header class="mb-10">
+        <p class="caption"><FormattedDate date={pubDate} /> · {readingTime}</p>
+        <h1 class="title mt-4 !text-[clamp(2.2rem,5.5vw,3.6rem)]">{title}</h1>
+        <TagList tags={tags} class="mt-6" />
+      </header>
+      {
+        image && (
+          <div class="mb-10 aspect-[16/9] overflow-hidden rounded-card bg-surface">
+            <img src={image} alt="" class="h-full w-full object-cover" />
+          </div>
+        )
+      }
+      <div class="prose max-w-none">
+        <slot />
+      </div>
+      {updatedDate && <p class="caption mt-10">Last updated <FormattedDate date={updatedDate} /></p>}
+    </article>
+
+    {
+      (prev || next) && (
+        <nav class="mt-16 grid gap-4 md:grid-cols-2" aria-label="More posts">
+          {prev ? (
+            <a href={postHref(prev)} class="card card-link">
+              <span class="caption flex items-center gap-1"><Icon name="chevron-right" class="size-4 rotate-180" /> Previous</span>
+              <span class="heading mt-2 line-clamp-2 block !text-xl">{prev.data.title}</span>
+            </a>
+          ) : <span />}
+          {next && (
+            <a href={postHref(next)} class="card card-link md:text-right">
+              <span class="caption flex items-center gap-1 md:justify-end">Next <Icon name="chevron-right" class="size-4" /></span>
+              <span class="heading mt-2 line-clamp-2 block !text-xl">{next.data.title}</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </Section>
+</Base>

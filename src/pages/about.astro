@@ -1,0 +1,65 @@
+---
+import Base from "../layouts/Base.astro";
+import Section from "../components/ui/Section.astro";
+import Button from "../components/ui/Button.astro";
+import Card from "../components/ui/Card.astro";
+import Steps from "../components/ui/Steps.astro";
+import { SITE } from "../config";
+---
+
+<Base title="About" description={`About ${SITE.author}.`}>
+  <Section tight>
+    <div class="grid items-center gap-12 md:grid-cols-[3fr_2fr]">
+      <div class="order-2 md:order-1">
+        <h1 class="display !text-[clamp(2.6rem,6.5vw,5.25rem)]">
+          <span class="block">Hello, I'm</span>
+          <span class="tone-2 block">{SITE.author}.</span>
+        </h1>
+        <p class="lead mt-6 max-w-xl">
+          One or two sentences on what you do and who you do it for. This page uses the same pieces as
+          every other page: a two-tone headline, a reading column, cards and the ink call to action.
+        </p>
+      </div>
+      <div class="order-1 md:order-2">
+        <div class="mx-auto aspect-square w-full max-w-[300px] overflow-hidden rounded-card bg-surface md:max-w-none">
+          <img src="/images/portrait.svg" alt="Portrait placeholder" class="h-full w-full object-cover" />
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <Section tone="surface" width="narrow">
+    <h2 class="title rise">The story.</h2>
+    <div class="prose rise mt-8 max-w-none">
+      <p>Write a few paragraphs here. Where you started, what you learned, what you are working on now. Links look <a href="/blog">like this</a>, and <strong>bold text</strong> stays in ink.</p>
+      <p>Keep it in a reading column: the narrow wrap keeps lines short enough to read comfortably on any screen.</p>
+    </div>
+  </Section>
+
+  <Section>
+    <h2 class="title rise text-center">What I do.</h2>
+    <div class="rise mt-12 grid gap-4 md:grid-cols-3">
+      <Card icon="layers" title="Product" text="Discovery, scoping and the decisions that keep a product small enough to ship." />
+      <Card icon="pen" title="Design" text="Flows, screens and design systems people can actually build from." />
+      <Card tone="ink" icon="code" title="Engineering" text="Web and mobile apps, from the first prototype to production." />
+    </div>
+  </Section>
+
+  <Section id="contact">
+    <div class="card card-ink rise grid gap-x-16 gap-y-10 !p-[clamp(1.75rem,5vw,5rem)] lg:grid-cols-2">
+      <div>
+        <h2 class="title"><span class="block">Let's talk.</span><span class="tone-2 block">It starts with one email.</span></h2>
+        <p class="lead mt-6">Tell me what you are working on. I reply within one working day.</p>
+        <div class="mt-10 flex flex-wrap items-center gap-6">
+          <Button href="mailto:hello@example.com" variant="invert" size="lg" icon="mail" iconStart>Email me</Button>
+          <a href="/blog" class="link-underline">Or read the blog</a>
+        </div>
+      </div>
+      <Steps class="steps-flush" items={[
+        { title: "You write", text: "A few lines on the problem and the people who have it." },
+        { title: "We talk", text: "A short call to see if it is a fit." },
+        { title: "We start small", text: "One clear first step, then grow from there." },
+      ]} />
+    </div>
+  </Section>
+</Base>

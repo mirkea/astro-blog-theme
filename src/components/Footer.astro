@@ -1,0 +1,47 @@
+---
+import { NAV, SITE, SOCIAL } from "../config";
+import Logo from "./Logo.astro";
+import SocialIcon from "./SocialIcon.astro";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="section section-tight border-t border-line !pb-10">
+  <div class="wrap">
+    <div class="grid gap-12 md:grid-cols-12">
+      <div class="md:col-span-6">
+        <a href="/" class="inline-flex items-center gap-2.5 text-ink">
+          <Logo />
+          <span class="font-display text-lg font-bold tracking-tight">{SITE.name}</span>
+        </a>
+        <p class="mt-4 max-w-sm text-ink-2">{SITE.tagline}</p>
+        <div class="mt-6 flex items-center gap-2">
+          {
+            SOCIAL.map((s) => (
+              <a href={s.href} aria-label={s.name} class="grid size-11 place-items-center rounded-full bg-surface text-ink-2 transition-colors hover:text-ink" target={s.href.startsWith("http") ? "_blank" : undefined} rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}>
+                <SocialIcon name={s.icon} />
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      <nav class="md:col-span-3" aria-label="Footer">
+        <p class="caption">Pages</p>
+        <ul class="mt-4 grid gap-3">
+          {NAV.map((item) => <li><a href={item.href} class="text-ink-2 transition-colors hover:text-ink">{item.text}</a></li>)}
+        </ul>
+      </nav>
+      <div class="md:col-span-3">
+        <p class="caption">More</p>
+        <ul class="mt-4 grid gap-3">
+          <li><a href="/rss.xml" class="text-ink-2 transition-colors hover:text-ink">RSS feed</a></li>
+          <li><a href="/ui" class="text-ink-2 transition-colors hover:text-ink">UI kit</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-line pt-8 md:flex-row">
+      <p class="caption">&copy; {year} {SITE.author}</p>
+      <p class="caption">Built with <a href="https://astro.build" class="text-ink-2 hover:text-ink">Astro</a></p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,30 @@
+{
+  "name": "astro-blog-theme",
+  "description": "Ink: a clean Astro theme for a personal site and blog. Two-tone headlines, pill buttons, rounded cards, dark mode, and a /ui page with every element.",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "4.2.3",
+    "@astrojs/rss": "4.0.18",
+    "@astrojs/sitemap": "^3.2.1",
+    "@iconify-json/solar": "1.2.13",
+    "@tailwindcss/typography": "0.5.19",
+    "@tailwindcss/vite": "4.3.0",
+    "astro": "5.18.1",
+    "reading-time": "1.5.0",
+    "tailwindcss": "4.3.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.9",
+    "typescript": "5.9.3"
+  }
+}

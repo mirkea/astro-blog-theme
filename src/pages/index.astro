@@ -1,0 +1,73 @@
+---
+import Base from "../layouts/Base.astro";
+import PostCard from "../components/PostCard.astro";
+import Section from "../components/ui/Section.astro";
+import SectionHeading from "../components/ui/SectionHeading.astro";
+import Button from "../components/ui/Button.astro";
+import Icon from "../components/ui/Icon.astro";
+import { getPosts, getTags, minutesToRead, postHref } from "../lib/posts";
+
+const posts = await getPosts();
+const recent = posts.slice(0, 3);
+const tags = getTags(posts).slice(0, 6);
+---
+
+<Base>
+  <Section>
+    <SectionHeading
+      eyebrow="Hello, I'm Your Name"
+      title="I build products."
+      title2="And write about it."
+      lead="A short line about who you are and what this site is for. Keep it to two sentences: what you do, and what readers find here."
+      size="display"
+      as="h1"
+    >
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+        <Button href="/blog" size="lg" icon="arrow-right">Read the blog</Button>
+        <a href="/about" class="link-more">More about me <Icon name="chevron-right" /></a>
+      </div>
+    </SectionHeading>
+  </Section>
+
+  <Section tone="surface">
+    <div class="rise flex flex-wrap items-end justify-between gap-4">
+      <h2 class="title">Recent posts.</h2>
+      <a href="/blog" class="link-more pb-2">View all posts <Icon name="chevron-right" /></a>
+    </div>
+    <div class="rise mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        recent.map((post) => (
+          <PostCard
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            href={postHref(post)}
+            readingTime={minutesToRead(post)}
+            tags={post.data.tags}
+            image={post.data.image}
+            tone="white"
+          />
+        ))
+      }
+    </div>
+  </Section>
+
+  {
+    tags.length > 0 && (
+      <Section>
+        <div class="rise flex flex-wrap items-end justify-between gap-4">
+          <h2 class="title">Explore topics.</h2>
+          <a href="/tags" class="link-more pb-2">All topics <Icon name="chevron-right" /></a>
+        </div>
+        <div class="rise mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {tags.map((tag) => (
+            <a href={`/tags/${tag.name}`} class="card card-link flex items-center justify-between gap-4 !py-6">
+              <p class="heading !text-xl">#{tag.name}</p>
+              <span class="pill pill-quiet shrink-0">{tag.count} {tag.count === 1 ? "post" : "posts"}</span>
+            </a>
+          ))}
+        </div>
+      </Section>
+    )
+  }
+</Base>
